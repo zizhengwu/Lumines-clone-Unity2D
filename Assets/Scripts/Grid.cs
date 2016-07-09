@@ -61,8 +61,32 @@ public class Grid : MonoBehaviour {
             for (int j = 0; j < Height; j++) {
                 if (ShouldClear[i, j]) {
                     Destroy(grid[i, j].gameObject);
+                    grid[i, j] = null;
                     ShouldClear[i, j] = false;
                 }
+            }
+        }
+        for (int i = 0; i < Width; i++) {
+            FallDownAtColumn(i);
+        }
+    }
+
+    private void FallDownAtColumn(int column) {
+        int current = 0;
+        for (int h = 0; h < Height; h++) {
+            if (grid[column, h] != null) {
+                if (h == current) {
+                }
+                else {
+                    grid[column, h].gameObject.GetComponent<Block>().DownTarget = current;
+                    grid[column, current] = grid[column, h];
+                    grid[column, h] = null;
+                    grid[column, current].gameObject.GetComponent<Block>().GoDown = true;
+                }
+                current += 1;
+            }
+            else {
+                
             }
         }
     }
