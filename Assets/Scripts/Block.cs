@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Block : MonoBehaviour {
 
+    public bool GoDown { get; set; }
+    public int DownTarget { get; set; }
+
 	// Use this for initialization
 	void Start () {
 	
@@ -10,6 +13,20 @@ public class Block : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    if (GoDown) {
+	        DownToDepth();
+	    }
 	}
+
+    private void DownToDepth() {
+        Vector3 position = transform.position;
+        Vector2 roundedPosition = Grid.RoundVector2(transform.position);
+        if (position.y - 0.5 > DownTarget) {
+            transform.position = new Vector3(position.x, position.y - 0.1f, position.z);
+        }
+        else {
+            transform.position = new Vector3(position.x, roundedPosition.y + 0.5f, position.z);
+            GoDown = false;
+        }
+    }
 }

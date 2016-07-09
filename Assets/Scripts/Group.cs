@@ -5,11 +5,7 @@ public class Group : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-
-    }
-
-    bool BlockIsValidGridPosition(Transform block) {
-        return true;
+        Grid.CurrentGroup = transform;
     }
 
     bool GroupIsValidGridPosition() {
@@ -101,8 +97,51 @@ public class Group : MonoBehaviour {
         }
 
         else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-            
-        }
+            // Modify position
+            transform.position += new Vector3(0, -1, 0);
 
+            // See if valid
+            if (GroupIsValidGridPosition()) {
+                // It's valid. Update grid.
+                UpdateGrid();
+            }
+            else {
+                enabled = false;
+                FindObjectOfType<Spawner>().spawnNext();
+                // It's not valid. revert.
+                transform.position += new Vector3(0, 1, 0);
+
+                int[] columnsHeight = Grid.ColumnFullUntilHeight();
+                foreach (Transform child in transform) {
+                    Vector3 v = child.localPosition;
+                    Vector2 gridV = Grid.RoundVector2(child.position);
+                    Grid.grid[(int)gridV.x, (int)gridV.y] = null;
+                    if (v.x == 0.5 && v.y == 0.5) {
+                        child.gameObject.GetComponent<Block>().DownTarget = columnsHeight[(int)gridV.x];
+                        Grid.grid[(int) gridV.x, (int) columnsHeight[(int) gridV.x]] = child;
+                        child.gameObject.GetComponent<Block>().GoDown = true;
+                    }
+                    else if (v.x == 0.5 && v.y == 1.5) {
+                        child.gameObject.GetComponent<Block>().DownTarget = columnsHeight[(int)gridV.x] + 1;
+                        Grid.grid[(int)gridV.x, (int)columnsHeight[(int)gridV.x] + 1] = child;
+                        child.gameObject.GetComponent<Block>().GoDown = true;
+                    }
+                    else if (v.x == 1.5 && v.y == 0.5) {
+                        child.gameObject.GetComponent<Block>().DownTarget = columnsHeight[(int)gridV.x];
+                        Grid.grid[(int)gridV.x, (int)columnsHeight[(int)gridV.x]] = child;
+                        child.gameObject.GetComponent<Block>().GoDown = true;
+                    }
+                    else if (v.x == 1.5 && v.y == 1.5) {
+                        child.gameObject.GetComponent<Block>().DownTarget = columnsHeight[(int)gridV.x] + 1;
+                        Grid.grid[(int)gridV.x, (int)columnsHeight[(int)gridV.x] + 1] = child;
+                        child.gameObject.GetComponent<Block>().GoDown = true;
+                    }
+                    else {
+                        throw new System.Exception();
+                    }
+                }
+            }
+
+        }
     }
 }
