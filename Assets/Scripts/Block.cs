@@ -5,6 +5,7 @@ public class Block : MonoBehaviour {
 
     public bool GoDown { get; set; }
     public int DownTarget { get; set; }
+    public int Type;
 
 	// Use this for initialization
 	void Start () {
@@ -17,6 +18,10 @@ public class Block : MonoBehaviour {
 	        DownToDepth();
 	    }
 	}
+
+    public bool IsSameType(Block other) {
+        return Type == other.Type;
+    }
 
     private void DownToDepth() {
         Vector3 position = transform.position;
