@@ -1,11 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Group : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
         Grid.CurrentGroup = transform;
+    }
+
+    bool GroupIsValidGridPosition(Vector3 GroupVector) {
+        Vector2[] children = {new Vector2(GroupVector.x + 0.5f, GroupVector.y + 0.5f), new Vector2(GroupVector.x + 0.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 0.5f)};
+        foreach (Vector2 child in children) {
+            Vector2 v = Grid.RoundVector2(child);
+
+            // Not inside Border?
+            if (!Grid.InsideBorder(v))
+                return false;
+
+            // Block in grid cell (and not part of same group)?
+            if (Grid.grid[(int)v.x, (int)v.y] != null &&
+                Grid.grid[(int)v.x, (int)v.y].parent != transform)
+                return false;
+        }
+        return true;
     }
 
     bool GroupIsValidGridPosition() {
@@ -43,30 +61,26 @@ public class Group : MonoBehaviour {
     void Update() {
         // Move Left
         if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-            // Modify position
-            transform.position += new Vector3(-1, 0, 0);
-
-            // See if valid
-            if (GroupIsValidGridPosition())
+            if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
+                transform.position += new Vector3(-1, 0, 0);
                 // It's valid. Update grid.
                 UpdateGrid();
-            else
-                // It's not valid. revert.
-                transform.position += new Vector3(1, 0, 0);
+            }
+            else {
+
+            }
         }
 
         // Move Right
         else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-            // Modify position
-            transform.position += new Vector3(1, 0, 0);
-
-            // See if valid
-            if (GroupIsValidGridPosition())
+            if (GroupIsValidGridPosition(transform.position + new Vector3(1, 0, 0))) {
+                transform.position += new Vector3(1, 0, 0);
                 // It's valid. Update grid.
                 UpdateGrid();
-            else
-                // It's not valid. revert.
-                transform.position += new Vector3(-1, 0, 0);
+            }
+            else {
+
+            }
         }
 
         // Rotate
@@ -97,19 +111,14 @@ public class Group : MonoBehaviour {
         }
 
         else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-            // Modify position
-            transform.position += new Vector3(0, -1, 0);
-
-            // See if valid
-            if (GroupIsValidGridPosition()) {
+            if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
+                transform.position += new Vector3(0, -1, 0);
                 // It's valid. Update grid.
                 UpdateGrid();
             }
             else {
                 enabled = false;
                 FindObjectOfType<Spawner>().spawnNext();
-                // It's not valid. revert.
-                transform.position += new Vector3(0, 1, 0);
 
                 int[] columnsHeight = Grid.ColumnFullUntilHeight();
                 foreach (Transform child in transform) {
