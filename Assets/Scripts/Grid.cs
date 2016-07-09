@@ -18,6 +18,7 @@ public class Grid : MonoBehaviour {
 	
 	}
 
+    
     public static Vector2 RoundVector2(Vector2 v) {
         return new Vector2(Mathf.Round(v.x - 0.5f),
                            Mathf.Round(v.y - 0.5f));

@@ -8,7 +8,11 @@ public class Group : MonoBehaviour {
 
     }
 
-    bool isValidGridPos() {
+    bool BlockIsValidGridPosition(Transform block) {
+        return true;
+    }
+
+    bool GroupIsValidGridPosition() {
         foreach (Transform child in transform) {
             Vector2 v = Grid.RoundVector2(child.position);
 
@@ -24,7 +28,7 @@ public class Group : MonoBehaviour {
         return true;
     }
 
-    void updateGrid() {
+    private void UpdateGrid() {
         // Remove old children from grid
         for (int y = 0; y < Grid.Height; ++y)
             for (int x = 0; x < Grid.Width; ++x)
@@ -47,9 +51,9 @@ public class Group : MonoBehaviour {
             transform.position += new Vector3(-1, 0, 0);
 
             // See if valid
-            if (isValidGridPos())
+            if (GroupIsValidGridPosition())
                 // It's valid. Update grid.
-                updateGrid();
+                UpdateGrid();
             else
                 // It's not valid. revert.
                 transform.position += new Vector3(1, 0, 0);
@@ -61,9 +65,9 @@ public class Group : MonoBehaviour {
             transform.position += new Vector3(1, 0, 0);
 
             // See if valid
-            if (isValidGridPos())
+            if (GroupIsValidGridPosition())
                 // It's valid. Update grid.
-                updateGrid();
+                UpdateGrid();
             else
                 // It's not valid. revert.
                 transform.position += new Vector3(-1, 0, 0);
@@ -94,6 +98,10 @@ public class Group : MonoBehaviour {
                 Vector2 v = Grid.RoundVector2(child.position);
                 Grid.grid[(int)v.x, (int)v.y] = child;
             }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            
         }
 
     }
