@@ -26,29 +26,12 @@ public class Group : MonoBehaviour {
         return true;
     }
 
-    private void UpdateGrid() {
-        // Remove old children from grid
-        for (int y = 0; y < Grid.Height; ++y)
-            for (int x = 0; x < Grid.Width; ++x)
-                if (Grid.grid[x, y] != null)
-                    if (Grid.grid[x, y].parent == transform)
-                        Grid.grid[x, y] = null;
-
-        // Add new children to grid
-        foreach (Transform child in transform) {
-            Vector2 v = Grid.RoundVector2(child.position);
-            Grid.grid[(int)v.x, (int)v.y] = child;
-        }
-    }
-
     // Update is called once per frame
     void Update() {
         // Move Left
         if (Input.GetKeyDown(KeyCode.LeftArrow)) {
             if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
                 transform.position += new Vector3(-1, 0, 0);
-                // It's valid. Update grid.
-                UpdateGrid();
             }
             else {
 
@@ -59,8 +42,6 @@ public class Group : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.RightArrow)) {
             if (GroupIsValidGridPosition(transform.position + new Vector3(1, 0, 0))) {
                 transform.position += new Vector3(1, 0, 0);
-                // It's valid. Update grid.
-                UpdateGrid();
             }
             else {
 
@@ -88,17 +69,12 @@ public class Group : MonoBehaviour {
                     throw new System.Exception();
                 }
             }
-            foreach (Transform child in transform) {
-                Vector2 v = Grid.RoundVector2(child.position);
-                Grid.grid[(int)v.x, (int)v.y] = child;
-            }
         }
 
         else if (Input.GetKeyDown(KeyCode.DownArrow)) {
             if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
                 transform.position += new Vector3(0, -1, 0);
                 // It's valid. Update grid.
-                UpdateGrid();
             }
             else {
                 enabled = false;
@@ -108,7 +84,6 @@ public class Group : MonoBehaviour {
                 foreach (Transform child in transform) {
                     Vector3 v = child.localPosition;
                     Vector2 gridV = Grid.RoundVector2(child.position);
-                    Grid.grid[(int)gridV.x, (int)gridV.y] = null;
                     int downwardsGridY;
                     if (v.y == 0.5) {
                         downwardsGridY = columnsHeight[(int) gridV.x];
