@@ -71,15 +71,29 @@ public class Group : MonoBehaviour {
 
         // Rotate
         else if (Input.GetKeyDown(KeyCode.UpArrow)) {
-            transform.Rotate(0, 0, -90);
+            foreach (Transform child in transform) {
+                Vector3 v = child.localPosition;
 
-            // See if valid
-            if (isValidGridPos())
-                // It's valid. Update grid.
-                updateGrid();
-            else
-                // It's not valid. revert.
-                transform.Rotate(0, 0, 90);
+                if (v.x == 0.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
+                }
+                else if (v.x == 0.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
+                }
+                else {
+                    throw new System.Exception();
+                }
+            }
+            foreach (Transform child in transform) {
+                Vector2 v = Grid.RoundVector2(child.position);
+                Grid.grid[(int)v.x, (int)v.y] = child;
+            }
         }
 
     }
