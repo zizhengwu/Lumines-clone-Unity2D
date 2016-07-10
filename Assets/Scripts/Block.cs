@@ -20,6 +20,9 @@ public class Block : MonoBehaviour {
         set {
             if (value != status) {
                 if (value == State.ToBeErased) {
+                    if (status == State.InsideCurrentStreak) {
+                        return;
+                    }
                     if (GoDown) {
                         status = State.ToBeErasedWhileFallingDown;
                     }
@@ -29,7 +32,12 @@ public class Block : MonoBehaviour {
                     }
                 }
                 else if (value == State.Normal) {
+                    status = State.Normal;
                     ChangeSprite(State.Normal);
+                }
+                else if (value == State.InsideCurrentStreak) {
+                    status = State.InsideCurrentStreak;
+                    ChangeSprite(State.InsideCurrentStreak);
                 }
             }
         }

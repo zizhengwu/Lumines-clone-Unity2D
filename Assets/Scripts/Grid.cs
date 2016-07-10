@@ -30,6 +30,18 @@ public class Grid : MonoBehaviour {
         }
     }
 
+    public static void JudgeInsideClearanceAtColumn(int column) {
+        for (int i = 0; i < Height; i++) {
+            if (grid[column, i] == null) {
+                continue;
+            }
+            if (grid[column, i] && grid[column, i].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
+                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.InsideCurrentStreak;
+                ShouldClear[column, i] = true;
+            }
+        }
+    }
+
     public static void JudgeClearAtColumn(int column) {
         if (column < 0 || column >= Width) {
             return;
@@ -56,8 +68,6 @@ public class Grid : MonoBehaviour {
                         grid[potentialColumn, h].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>()) && grid[potentialColumn, h + 1].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
-                        ShouldClear[column, h] = true;
-                        ShouldClear[column, h + 1] = true;
                         toOrNotToBeErased[h] = true;
                         toOrNotToBeErased[h + 1] = true;
                         break;
