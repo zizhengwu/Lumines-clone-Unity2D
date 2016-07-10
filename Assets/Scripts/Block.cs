@@ -45,7 +45,14 @@ public class Block : MonoBehaviour {
 
     private void ChangeSprite(State value) {
         if (value == State.ToBeErased) {
-            gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.ToBeErased;
+            switch (Type) {
+                case 0:
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block0ToBeErased;
+                    break;
+                case 1:
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1ToBeErased;
+                    break;
+            }
         }
         else if (value == State.InsideCurrentStreak) {
             gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.InsideClearance;
@@ -53,11 +60,11 @@ public class Block : MonoBehaviour {
         else if (value == State.Normal) {
             switch (Type) {
                 case 0:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block0;
                     gameObject.GetComponent<Block>().Type = 0;
                     break;
                 case 1:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block2;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
                     gameObject.GetComponent<Block>().Type = 1;
                     break;
             }

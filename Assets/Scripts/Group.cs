@@ -15,11 +15,11 @@ public class Group : MonoBehaviour {
             GameObject c = child.gameObject;
             switch (types[Random.Range(0, 2)]) {
                 case 0:
-                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
+                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block0;
                     c.GetComponent<Block>().Type = 0;
                     break;
                 case 1:
-                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block2;
+                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
                     c.GetComponent<Block>().Type = 1;
                     break;
             }
