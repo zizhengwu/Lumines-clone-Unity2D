@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Group : MonoBehaviour {
 
     private int[] types = {0, 1};
+    private float lastFall = Time.time;
 
     // Use this for initialization
     void Start() {
@@ -89,7 +90,7 @@ public class Group : MonoBehaviour {
             }
         }
 
-        else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Time.time - lastFall >= 1) {
             if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
                 transform.position += new Vector3(0, -1, 0);
                 // It's valid. Update grid.
@@ -122,6 +123,7 @@ public class Group : MonoBehaviour {
                 }
 
             }
+            lastFall = Time.time;
 
         }
     }
