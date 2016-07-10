@@ -24,7 +24,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    void JudgeClearAtColumn(int column) {
+    static void JudgeClearAtColumn(int column) {
         for (int h = 0; h < Height; h++) {
             if (grid[column, h + 1] == null) {
                 break;
@@ -53,7 +53,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public void JudgeAndClearAll() {
+    public static void JudgeAndClearAll() {
         for (int i = 0; i < Width; i++) {
             JudgeClearAtColumn(i);
         }
@@ -71,7 +71,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    private void FallDownAtColumn(int column) {
+    private static void FallDownAtColumn(int column) {
         int current = 0;
         for (int h = 0; h < Height; h++) {
             if (grid[column, h] != null) {
