@@ -114,14 +114,17 @@ public class Group : MonoBehaviour {
                         throw new System.Exception();
                     }
                     if (downwardsGridY >= 10) {
-                        Debug.Log("GAMEOVER");
-                        SceneManager.LoadScene("game");
+                        GameManager.GameOver();
                     }
                     child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
                     Grid.grid[(int) gridV.x, downwardsGridY] = child;
                     child.gameObject.GetComponent<Block>().GoDown = true;
                 }
 
+                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
             }
             lastFall = GameManager.GameTime;
 

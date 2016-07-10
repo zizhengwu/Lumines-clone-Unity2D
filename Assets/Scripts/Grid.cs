@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Grid : MonoBehaviour {
     // Grid size
@@ -17,14 +18,24 @@ public class Grid : MonoBehaviour {
 
     }
 
+    public static void GameOver() {
+        grid = new Transform[Width, Height];
+        ShouldClear = new bool[Width, Height];
+    }
+
     // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.F1)) {
-            JudgeAndClearAll();
+            ClearAll();
         }
     }
 
-    static void JudgeClearAtColumn(int column) {
+    public static void JudgeClearAtColumn(int column) {
+        if (column < 0 || column >= Width) {
+            return;
+        }
+        bool[] toOrNotToBeErased = Enumerable.Repeat(false, Height).ToArray();
+
         for (int h = 0; h < Height; h++) {
             if (grid[column, h + 1] == null) {
                 break;
@@ -39,6 +50,7 @@ public class Grid : MonoBehaviour {
                 if (columnRight < Width) {
                     potentialColumns.Add(columnRight);
                 }
+                
                 foreach (int potentialColumn in potentialColumns) {
                     if (grid[potentialColumn, h] && grid[potentialColumn, h + 1] &&
                         grid[potentialColumn, h].gameObject.GetComponent<Block>()
@@ -46,17 +58,34 @@ public class Grid : MonoBehaviour {
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
                         ShouldClear[column, h] = true;
                         ShouldClear[column, h + 1] = true;
+                        toOrNotToBeErased[h] = true;
+                        toOrNotToBeErased[h + 1] = true;
                         break;
                     }
                 }
             }
         }
+
+        for (int i = 0; i < Height; i++) {
+            if (grid[column, i] == null) {
+                continue;
+            }
+            if (toOrNotToBeErased[i]) {
+                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.ToBeErased;
+            }
+            else {
+                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.Normal;
+            }
+        }
     }
 
-    public static void JudgeAndClearAll() {
+    public static void JudgeAllColumns() {
         for (int i = 0; i < Width; i++) {
             JudgeClearAtColumn(i);
         }
+    }
+
+    public static void ClearAll() {
         for (int i = 0; i < Width; i++) {
             for (int j = 0; j < Height; j++) {
                 if (ShouldClear[i, j]) {

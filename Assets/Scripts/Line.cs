@@ -13,7 +13,8 @@ public class Line : MonoBehaviour {
 	    Vector3 previousPosition = transform.position;
         transform.position = new Vector3(0 + (16 - 0) * (GameManager.GameTime % 4) / 4, previousPosition.y, previousPosition.z);
 	    if (transform.position.x < previousPosition.x) {
-	        Grid.JudgeAndClearAll();
+	        Grid.ClearAll();
+            Grid.JudgeAllColumns();
 	    }
 	}
 

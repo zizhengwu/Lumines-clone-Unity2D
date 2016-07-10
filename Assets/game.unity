@@ -248,7 +248,7 @@ MonoBehaviour:
   - Block1: {fileID: 21300000, guid: cf190dd514595ab43b33bbcd3b3dc07a, type: 3}
     Block2: {fileID: 21300000, guid: 88b100a93bec0044aa67dc0e4a5ca334, type: 3}
     ToBeErased: {fileID: 21300000, guid: 24985e821495ebd42b1a841579ecf34f, type: 3}
-    InsideClearance: {fileID: 0}
+    InsideClearance: {fileID: 21300000, guid: 367b1b3d8253cb640af7f197c5c7b46d, type: 3}
 --- !u!114 &727353662
 MonoBehaviour:
   m_ObjectHideFlags: 0

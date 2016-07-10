@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static float GameTime;
@@ -8,7 +9,13 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 	
 	}
-	
+
+    public static void GameOver() {
+        Grid.GameOver();
+        Debug.Log("GAMEOVER");
+        SceneManager.LoadScene("game");
+    }
+
 	// Update is called once per frame
 	void Update () {
 	    GameTime = Time.time;
