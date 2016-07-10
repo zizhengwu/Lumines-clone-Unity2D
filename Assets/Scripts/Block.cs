@@ -5,7 +5,7 @@ public class Block : MonoBehaviour {
 
     public bool GoDown { get; set; }
     public int DownTarget { get; set; }
-    public int Type;
+    public int Type { get; set; }
 
 	// Use this for initialization
 	void Start () {

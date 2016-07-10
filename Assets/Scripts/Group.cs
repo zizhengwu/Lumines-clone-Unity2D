@@ -1,12 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class Group : MonoBehaviour {
 
+    private int[] types = {0, 1};
+
     // Use this for initialization
     void Start() {
         Grid.CurrentGroup = transform;
+        foreach (Transform child in transform) {
+            GameObject c = child.gameObject;
+            switch (types[Random.Range(0, 2)]) {
+                case 0:
+                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
+                    c.GetComponent<Block>().Type = 0;
+                    break;
+                case 1:
+                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block2;
+                    c.GetComponent<Block>().Type = 1;
+                    break;
+            }
+            
+            
+        }
     }
 
     bool GroupIsValidGridPosition(Vector3 GroupVector) {
