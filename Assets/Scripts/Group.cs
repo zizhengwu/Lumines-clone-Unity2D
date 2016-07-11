@@ -68,7 +68,7 @@ public class Group : MonoBehaviour {
         }
 
         // Move Right
-        if (Input.GetKey(KeyCode.D)) {
+        else if (Input.GetKey(KeyCode.D)) {
             if ((consecutiveRight && GameManager.GameTime - _lastRight >= 0.07) || !consecutiveRight) {
                 _lastRight = GameManager.GameTime;
                 if (!consecutiveRight) {
@@ -85,8 +85,50 @@ public class Group : MonoBehaviour {
             consecutiveRight = false;
         }
 
+        // Move Down
+        if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.07) || GameManager.GameTime - _lastFall >= 1) {
+            _lastFall = GameManager.GameTime;
+            if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
+                transform.position += new Vector3(0, -1, 0);
+                // It's valid. Update grid.
+            }
+            else {
+                enabled = false;
+                _lastFall += 0.2f;
+                FindObjectOfType<Spawner>().spawnNext();
+
+                int[] columnsHeight = Grid.ColumnFullUntilHeight();
+                foreach (Transform child in transform) {
+                    Vector3 v = child.localPosition;
+                    Vector2 gridV = Grid.RoundVector2(child.position);
+                    int downwardsGridY;
+                    if (v.y == 0.5) {
+                        downwardsGridY = columnsHeight[(int) gridV.x];
+                    }
+                    else if (v.y == 1.5) {
+                        downwardsGridY = columnsHeight[(int) gridV.x] + 1;
+                    }
+                    else {
+                        throw new System.Exception();
+                    }
+                    if (downwardsGridY >= 10) {
+                        GameManager.GameOver();
+                    }
+                    child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
+                    Grid.grid[(int) gridV.x, downwardsGridY] = child;
+                    child.gameObject.GetComponent<Block>().GoDown = true;
+                }
+
+                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
+            }
+
+        }
+
         // Clockwise Rotate
-        else if (Input.GetKeyDown(KeyCode.K)) {
+        if (Input.GetKeyDown(KeyCode.K)) {
             foreach (Transform child in transform) {
                 Vector3 v = child.localPosition;
 
@@ -128,47 +170,6 @@ public class Group : MonoBehaviour {
                     throw new System.Exception();
                 }
             }
-        }
-
-        else if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.07) || GameManager.GameTime - _lastFall >= 1) {
-            _lastFall = GameManager.GameTime;
-            if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
-                transform.position += new Vector3(0, -1, 0);
-                // It's valid. Update grid.
-            }
-            else {
-                enabled = false;
-                _lastFall += 0.2f;
-                FindObjectOfType<Spawner>().spawnNext();
-
-                int[] columnsHeight = Grid.ColumnFullUntilHeight();
-                foreach (Transform child in transform) {
-                    Vector3 v = child.localPosition;
-                    Vector2 gridV = Grid.RoundVector2(child.position);
-                    int downwardsGridY;
-                    if (v.y == 0.5) {
-                        downwardsGridY = columnsHeight[(int) gridV.x];
-                    }
-                    else if (v.y == 1.5) {
-                        downwardsGridY = columnsHeight[(int) gridV.x] + 1;
-                    }
-                    else {
-                        throw new System.Exception();
-                    }
-                    if (downwardsGridY >= 10) {
-                        GameManager.GameOver();
-                    }
-                    child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
-                    Grid.grid[(int) gridV.x, downwardsGridY] = child;
-                    child.gameObject.GetComponent<Block>().GoDown = true;
-                }
-
-                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
-            }
-
         }
     }
 }
