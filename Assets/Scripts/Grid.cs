@@ -162,15 +162,11 @@ public class Grid : MonoBehaviour {
         if (!ValidCoordinate(coordinate.x, coordinate.y)) {
             return true;
         }
-        Block.State status = grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status;
-        if (status == Block.State.InsideCurrentStreak || status == Block.State.ToBeErased || status == Block.State.ToBeErasedWhileFallingDown) {
+        if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
             if (coordinate.x >= beforeColumn) {
                 return false;
             }
-            if (status ==
-                Block.State.InsideCurrentStreak) {
-                current.Add(coordinate);
-            }
+            current.Add(coordinate);
             foreach (IntVector2 direction in directions) {
                 if (
                     !DfsFindBlocks(current, visited, new IntVector2(coordinate.x + direction.x, coordinate.y + direction.y),
