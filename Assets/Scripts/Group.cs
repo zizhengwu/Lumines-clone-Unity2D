@@ -98,7 +98,7 @@ public class Group : MonoBehaviour {
 
         // Move Left
         else if (Input.GetKey(KeyCode.A)) {
-            if ((consecutiveLeft && GameManager.GameTime - _lastLeft >= 0.07) || !consecutiveLeft) {
+            if ((consecutiveLeft && GameManager.GameTime - _lastLeft >= 0.03) || !consecutiveLeft) {
                 _lastLeft = GameManager.GameTime;
                 if (!consecutiveLeft) {
                     consecutiveLeft = true;
@@ -116,7 +116,7 @@ public class Group : MonoBehaviour {
 
         // Move Right
         else if (Input.GetKey(KeyCode.D)) {
-            if ((consecutiveRight && GameManager.GameTime - _lastRight >= 0.07) || !consecutiveRight) {
+            if ((consecutiveRight && GameManager.GameTime - _lastRight >= 0.03) || !consecutiveRight) {
                 _lastRight = GameManager.GameTime;
                 if (!consecutiveRight) {
                     consecutiveRight = true;
@@ -133,7 +133,7 @@ public class Group : MonoBehaviour {
         }
 
         // Move Down
-        if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.07) || GameManager.GameTime - _lastFall >= 1) {
+        if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.03) || GameManager.GameTime - _lastFall >= 1) {
             _lastFall = GameManager.GameTime;
             if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
                 transform.position += new Vector3(0, -1, 0);

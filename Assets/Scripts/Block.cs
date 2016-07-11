@@ -91,7 +91,7 @@ public class Block : MonoBehaviour {
         Vector3 position = transform.position;
         Vector2 roundedPosition = Grid.RoundVector2(transform.position);
         if (position.y - 0.5 > DownTarget) {
-            transform.position = new Vector3(position.x, position.y - 0.2f, position.z);
+            transform.position = new Vector3(position.x, position.y - 0.4f, position.z);
         }
         else {
             transform.position = new Vector3(position.x, roundedPosition.y + 0.5f, position.z);

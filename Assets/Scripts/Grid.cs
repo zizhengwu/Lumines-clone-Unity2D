@@ -23,6 +23,7 @@ public class Grid : MonoBehaviour {
     public static void GameOver() {
         grid = new Transform[Width, Height];
         ShouldClear = new bool[Width, Height];
+        coordinatesToBeCleared = new List<IntVector2>();
     }
 
     // Update is called once per frame
