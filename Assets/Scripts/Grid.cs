@@ -11,7 +11,7 @@ public class Grid : MonoBehaviour {
 
     public static Transform[,] grid = new Transform[Width, Height];
     public static bool[,] ShouldClear = new bool[Width, Height];
-    private static List<IntVector2> directions = new List<IntVector2>() {new IntVector2(-1, 0), new IntVector2(1, 0), new IntVector2(0, 1), new IntVector2(0, -1)};
+    private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
     public static Transform CurrentGroup;
 
@@ -122,60 +122,31 @@ public class Grid : MonoBehaviour {
     }
 
     public static void ClearBeforeColumn(int column) {
-        HashSet<IntVector2> coordinatesToBeCleared = new HashSet<IntVector2>();
-        for (int i = 0; i < Height; i++) {
-            if (!ValidCoordinate(column - 1, i)) {
+        bool exist = false;
+        List<IntVector2> currentColumn = new List<IntVector2>();
+        for (int h = 0; h < Height; h++) {
+            if (!ValidCoordinate(column, h)) {
                 break;
             }
-            if (coordinatesToBeCleared.Contains(new IntVector2(column - 1, i))) {
-                continue;
-            }
-            else if (grid[column - 1, i].gameObject.GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
-                List<IntVector2> current = new List<IntVector2>();
-                HashSet<IntVector2> visited = new HashSet<IntVector2>();
-                if (DfsFindBlocks(current, visited, new IntVector2(column - 1, i), column)) {
-                    foreach (IntVector2 blockCoordinate in current) {
-                        coordinatesToBeCleared.Add(blockCoordinate);
-                    }
-                }
+            if (grid[column, h].gameObject.GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
+                exist = true;
+                currentColumn.Add(new IntVector2(column, h));
             }
         }
-        HashSet<int> columnsToFallDown = new HashSet<int>();
-        foreach (IntVector2 coordinate in coordinatesToBeCleared) {
-            destroyBlockAtGrid(coordinate.x, coordinate.y);
-            columnsToFallDown.Add(coordinate.x);
-        }
-        foreach (int i in columnsToFallDown) {
-            FallDownAtColumn(i);
-        }
-        JudgeAllColumns();
-    }
-
-    private static bool DfsFindBlocks(List<IntVector2> current, HashSet<IntVector2> visited, IntVector2 coordinate,
-        int beforeColumn ) {
-        //Debug.Log(String.Format("{0} {1}", coordinate.x, coordinate.y));
-        if (visited.Contains(coordinate)) {
-            return true;
-        }
-        visited.Add(coordinate);
-
-        if (!ValidCoordinate(coordinate.x, coordinate.y)) {
-            return true;
-        }
-        if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
-            if (coordinate.x >= beforeColumn) {
-                return false;
+        if (!exist || column == 0) {
+            HashSet<int> columnsToFallDown = new HashSet<int>();
+            foreach (IntVector2 coordinate in coordinatesToBeCleared) {
+                destroyBlockAtGrid(coordinate.x, coordinate.y);
+                columnsToFallDown.Add(coordinate.x);
             }
-            current.Add(coordinate);
-            foreach (IntVector2 direction in directions) {
-                if (
-                    !DfsFindBlocks(current, visited, new IntVector2(coordinate.x + direction.x, coordinate.y + direction.y),
-                        beforeColumn)) {
-                    return false;
-                }
+            foreach (int i in columnsToFallDown) {
+                FallDownAtColumn(i);
             }
+            JudgeAllColumns();
+            coordinatesToBeCleared = new List<IntVector2>();
         }
-        return true;
+        coordinatesToBeCleared.AddRange(currentColumn);
+        
     }
 
     private static void FallDownAtColumn(int column) {
