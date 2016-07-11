@@ -12,13 +12,16 @@ public class Line : MonoBehaviour {
 	void Update () {
 	    Vector3 previousPosition = transform.position;
         transform.position = new Vector3(0 + (16 - 0) * (GameManager.GameTime % 4) / 4, previousPosition.y, previousPosition.z);
-	    if ((int) transform.position.x > (int) previousPosition.x) {
-	        Grid.JudgeInsideClearanceAtColumn((int) previousPosition.x);
-	    }
-	    else if (transform.position.x < previousPosition.x) {
-	        Grid.JudgeInsideClearanceAtColumn(Grid.Width - 1);
-            Grid.ClearAll();
-            Grid.JudgeAllColumns();
+        // x is from 0 to 15
+	    int x = (int) transform.position.x;
+	    if ((int) transform.position.x != (int) previousPosition.x) {
+	        Grid.JudgeInsideClearanceAtColumn((int) x);
+	        if (x != 0) {
+	            Grid.ClearBeforeColumn((int) transform.position.x);
+	        }
+	        else {
+                Grid.ClearBeforeColumn(16);
+            }
 	    }
 	}
 
