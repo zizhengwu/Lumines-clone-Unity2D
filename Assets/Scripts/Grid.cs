@@ -33,7 +33,7 @@ public class Grid : MonoBehaviour {
     public static void JudgeInsideClearanceAtColumn(int column) {
         for (int i = 0; i < Height; i++) {
             if (grid[column, i] == null) {
-                continue;
+                return;
             }
             if (grid[column, i] && grid[column, i].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
                 grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.InsideCurrentStreak;

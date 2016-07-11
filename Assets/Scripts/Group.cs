@@ -50,8 +50,54 @@ public class Group : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // Clockwise Rotate
+        if (Input.GetKeyDown(KeyCode.K)) {
+            foreach (Transform child in transform) {
+                Vector3 v = child.localPosition;
+
+                if (v.x == 0.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
+                }
+                else if (v.x == 0.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
+                }
+                else {
+                    throw new System.Exception();
+                }
+            }
+        }
+
+        // Anticlockwise Rotate
+        else if (Input.GetKeyDown(KeyCode.J)) {
+            foreach (Transform child in transform) {
+                Vector3 v = child.localPosition;
+
+                if (v.x == 0.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 1.5) {
+                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
+                }
+                else if (v.x == 1.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
+                }
+                else if (v.x == 0.5 && v.y == 0.5) {
+                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
+                }
+                else {
+                    throw new System.Exception();
+                }
+            }
+        }
+
         // Move Left
-        if (Input.GetKey(KeyCode.A)) {
+        else if (Input.GetKey(KeyCode.A)) {
             if ((consecutiveLeft && GameManager.GameTime - _lastLeft >= 0.07) || !consecutiveLeft) {
                 _lastLeft = GameManager.GameTime;
                 if (!consecutiveLeft) {
@@ -126,51 +172,6 @@ public class Group : MonoBehaviour {
                 Grid.JudgeClearAtColumn((int) transform.position.x + 2);
             }
 
-        }
-
-        // Clockwise Rotate
-        if (Input.GetKeyDown(KeyCode.K)) {
-            foreach (Transform child in transform) {
-                Vector3 v = child.localPosition;
-
-                if (v.x == 0.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
-                }
-                else if (v.x == 0.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
-                }
-                else {
-                    throw new System.Exception();
-                }
-            }
-        }
-        // Anticlockwise Rotate
-        else if (Input.GetKeyDown(KeyCode.J)) {
-            foreach (Transform child in transform) {
-                Vector3 v = child.localPosition;
-
-                if (v.x == 0.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
-                }
-                else if (v.x == 0.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
-                }
-                else {
-                    throw new System.Exception();
-                }
-            }
         }
     }
 }
