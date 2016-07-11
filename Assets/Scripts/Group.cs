@@ -11,6 +11,7 @@ public class Group : MonoBehaviour {
     private float _lastRight = GameManager.GameTime;
     private bool consecutiveLeft = false;
     private bool consecutiveRight = false;
+    public int blocksRemaining = 4;
 
     // Use this for initialization
     void Start() {

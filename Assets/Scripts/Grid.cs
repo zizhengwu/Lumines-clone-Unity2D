@@ -99,7 +99,12 @@ public class Grid : MonoBehaviour {
         for (int i = 0; i < Width; i++) {
             for (int j = 0; j < Height; j++) {
                 if (ShouldClear[i, j]) {
+                    GameObject parent = grid[i, j].parent.gameObject;
+                    parent.GetComponent<Group>().blocksRemaining -= 1;
                     Destroy(grid[i, j].gameObject);
+                    if (parent.GetComponent<Group>().blocksRemaining == 0) {
+                        Destroy(parent);
+                    }
                     grid[i, j] = null;
                     ShouldClear[i, j] = false;
                 }
