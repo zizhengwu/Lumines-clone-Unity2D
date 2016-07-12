@@ -99,6 +99,7 @@ public class Group : MonoBehaviour {
         // Move Left
         else if (Input.GetKey(KeyCode.A)) {
             if ((consecutiveLeft && GameManager.GameTime - _lastLeft >= 0.03) || !consecutiveLeft) {
+                SoundManager.Instance.PlaySound(SoundManager.Sound.Left);
                 _lastLeft = GameManager.GameTime;
                 if (!consecutiveLeft) {
                     consecutiveLeft = true;
@@ -116,6 +117,7 @@ public class Group : MonoBehaviour {
 
         // Move Right
         else if (Input.GetKey(KeyCode.D)) {
+            SoundManager.Instance.PlaySound(SoundManager.Sound.Right);
             if ((consecutiveRight && GameManager.GameTime - _lastRight >= 0.03) || !consecutiveRight) {
                 _lastRight = GameManager.GameTime;
                 if (!consecutiveRight) {
@@ -168,10 +170,15 @@ public class Group : MonoBehaviour {
                     child.gameObject.GetComponent<Block>().GoDown = true;
                 }
 
-                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
+                bool clearAny = false;
+                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x - 1);
+                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x);
+                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x + 1);
+                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x + 2);
+
+                if (clearAny) {
+                    SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
+                }
             }
 
         }

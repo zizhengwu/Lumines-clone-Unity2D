@@ -8,4 +8,5 @@ public class Theme {
     public Sprite Block0ToBeErased;
     public Sprite Block1ToBeErased;
     public Sprite InsideClearance;
+    public string ThemeName;
 }

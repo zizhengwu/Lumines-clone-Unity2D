@@ -45,9 +45,10 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static void JudgeClearAtColumn(int column) {
+    public static bool JudgeClearAtColumn(int column) {
+        bool clearAny = false;
         if (column < 0 || column >= Width) {
-            return;
+            return false;
         }
         bool[] toOrNotToBeErased = Enumerable.Repeat(false, Height).ToArray();
 
@@ -71,6 +72,7 @@ public class Grid : MonoBehaviour {
                         grid[potentialColumn, h].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>()) && grid[potentialColumn, h + 1].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
+                        clearAny = true;
                         toOrNotToBeErased[h] = true;
                         toOrNotToBeErased[h + 1] = true;
                         break;
@@ -90,6 +92,8 @@ public class Grid : MonoBehaviour {
                 grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.Normal;
             }
         }
+
+        return clearAny;
     }
 
     public static void JudgeAllColumns() {

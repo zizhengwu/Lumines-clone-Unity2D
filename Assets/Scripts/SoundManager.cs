@@ -1,0 +1,138 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class SoundManager : MonoBehaviour {
+    public static SoundManager Instance = null;
+
+
+    private AudioSource left;
+    private AudioSource right;
+    private AudioSource theme;
+    private AudioSource clockwise;
+    private AudioSource anticlockwise;
+    private AudioSource hit;
+    private List<AudioSource> clear = new List<AudioSource>();
+    private List<AudioSource>.Enumerator clearIterator;
+    private float lastClear = GameManager.GameTime;
+
+    public enum Sound {
+        Left,
+        Right,
+        Theme,
+        Clockwise,
+        AntiClockwise,
+        Hit,
+        Clear
+    }
+
+
+    void Awake() {
+        //Check if instance already exists
+        if (Instance == null)
+
+            //if not, set instance to this
+            Instance = this;
+
+        //If instance already exists and it's not this:
+        else if (Instance != this)
+
+            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+            Destroy(gameObject);
+
+        //Sets this to not be destroyed when reloading scene
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void changeTheme() {
+        if (!left) {
+            left = gameObject.AddComponent<AudioSource>();
+            left.volume = 0.05f;
+        }
+        if (!right) {
+            right = gameObject.AddComponent<AudioSource>();
+            right.volume = 0.05f;
+        }
+        if (!theme) {
+            theme = gameObject.AddComponent<AudioSource>();
+        }
+        if (!clockwise) {
+            clockwise = gameObject.AddComponent<AudioSource>();
+        }
+        if (!anticlockwise) {
+            anticlockwise = gameObject.AddComponent<AudioSource>();
+        }
+        if (!hit) {
+            hit = gameObject.AddComponent<AudioSource>();
+        }
+        for (int i = 1; i <= 5; i++) {
+            clear.Add(gameObject.AddComponent<AudioSource>());
+            clear[i - 1].volume = 0.3f;
+        }
+
+        string themePathPrefix = "Themes/" + ThemeManager.CurrentThemeName + "/Sound/";
+
+        left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
+        right.clip = Resources.Load(themePathPrefix + "right") as AudioClip;
+        theme.clip = Resources.Load(themePathPrefix + "theme") as AudioClip;
+        clockwise.clip = Resources.Load(themePathPrefix + "clockwise") as AudioClip;
+        anticlockwise.clip = Resources.Load(themePathPrefix + "anticlockwise") as AudioClip;
+        hit.clip = Resources.Load(themePathPrefix + "hit") as AudioClip;
+        for (int i = 1; i <= 5; i++) {
+            clear[i-1].clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
+        }
+        GetNewClearIterator();
+    }
+
+    public void PlaySound(Sound sound) {
+        if (sound == Sound.Left) {
+            left.Play();
+        }
+        if (sound == Sound.Right) {
+            right.Play();
+        }
+        if (sound == Sound.Clockwise) {
+            clockwise.Play();
+        }
+        if (sound == Sound.AntiClockwise) {
+            anticlockwise.Play();
+        }
+        if (sound == Sound.Hit) {
+            hit.Play();
+        }
+        if (sound == Sound.Theme) {
+            theme.Play();
+        }
+        if (sound == Sound.Clear) {
+            if (GameManager.GameTime - lastClear >= 2) {
+                GetNewClearIterator();
+                clearIterator.Current.Play();
+                clearIterator.MoveNext();
+            }
+            else
+            {
+                clearIterator.Current.Play();
+                if (!clearIterator.MoveNext()) {
+                    GetNewClearIterator();
+                }
+            }
+            lastClear = GameManager.GameTime;
+        }
+
+    }
+
+    public void GetNewClearIterator() {
+        clearIterator = clear.GetEnumerator();
+        clearIterator.MoveNext();
+    }
+
+    // Use this for initialization
+    void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
