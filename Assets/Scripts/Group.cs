@@ -159,7 +159,9 @@ public class Group : MonoBehaviour {
                         throw new System.Exception();
                     }
                     if (downwardsGridY >= 10) {
-                        GameManager.GameOver();
+                        enabled = false;
+                        GameManager.Instance.GameOver();
+                        return;
                     }
                     child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
                     Grid.grid[(int) gridV.x, downwardsGridY] = child;
