@@ -137,8 +137,15 @@ public class Group : MonoBehaviour {
         // Move Down
         if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.03) || GameManager.GameTime - _lastFall >= 1) {
             _lastFall = GameManager.GameTime;
+            List<IntVector2> blocksCoordinate = new List<IntVector2>();
             if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
                 transform.position += new Vector3(0, -1, 0);
+                //BlocksCoordinate.AddRange(new List<IntVector2>() {
+                //    new IntVector2((int)Grid.RoundVector2(transform.position).x, (int)Grid.RoundVector2(transform.position).y),
+                //    new IntVector2((int)Grid.RoundVector2(transform.position).x + 1, (int)Grid.RoundVector2(transform.position).y),
+                //    new IntVector2((int)Grid.RoundVector2(transform.position).x, (int)Grid.RoundVector2(transform.position).y + 1),
+                //    new IntVector2((int)Grid.RoundVector2(transform.position).x + 1, (int)Grid.RoundVector2(transform.position).y + 1)
+                //});
                 // It's valid. Update grid.
             }
             else {
@@ -167,20 +174,21 @@ public class Group : MonoBehaviour {
                     }
                     child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
                     Grid.grid[(int) gridV.x, downwardsGridY] = child;
+                    blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
                     child.gameObject.GetComponent<Block>().GoDown = true;
                 }
 
-                bool clearAny = false;
-                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x - 1);
-                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x);
-                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x + 1);
-                clearAny |= Grid.JudgeClearAtColumn((int) transform.position.x + 2);
+                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
+                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
 
-                if (clearAny) {
+            }
+            if (blocksCoordinate.Count != 0) {
+                if (Grid.BlocksInsideClearance(blocksCoordinate)) {
                     SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
                 }
             }
-
         }
     }
 }

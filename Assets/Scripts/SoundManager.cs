@@ -63,11 +63,11 @@ public class SoundManager : MonoBehaviour {
         }
         if (!left) {
             left = gameObject.AddComponent<AudioSource>();
-            left.volume = 0.05f;
+            left.volume = 0.2f;
         }
         if (!right) {
             right = gameObject.AddComponent<AudioSource>();
-            right.volume = 0.05f;
+            right.volume = 0.2f;
         }
         if (!theme) {
             theme = gameObject.AddComponent<AudioSource>();

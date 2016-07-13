@@ -28,9 +28,17 @@ public class Grid : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.F1)) {
-            ClearAll();
+
+    }
+
+    public static bool BlocksInsideClearance(List<IntVector2> coordinates) {
+        foreach (IntVector2 coordinate in coordinates) {
+            if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased)
+            {
+                return true;
+            }
         }
+        return false;
     }
 
     public static void JudgeInsideClearanceAtColumn(int column) {
@@ -45,10 +53,9 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static bool JudgeClearAtColumn(int column) {
-        bool clearAny = false;
+    public static void JudgeClearAtColumn(int column) {
         if (column < 0 || column >= Width) {
-            return false;
+            return;
         }
         bool[] toOrNotToBeErased = Enumerable.Repeat(false, Height).ToArray();
 
@@ -72,7 +79,6 @@ public class Grid : MonoBehaviour {
                         grid[potentialColumn, h].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>()) && grid[potentialColumn, h + 1].gameObject.GetComponent<Block>()
                             .IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
-                        clearAny = true;
                         toOrNotToBeErased[h] = true;
                         toOrNotToBeErased[h + 1] = true;
                         break;
@@ -92,8 +98,6 @@ public class Grid : MonoBehaviour {
                 grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.Normal;
             }
         }
-
-        return clearAny;
     }
 
     public static void JudgeAllColumns() {
@@ -101,6 +105,8 @@ public class Grid : MonoBehaviour {
             JudgeClearAtColumn(i);
         }
     }
+
+
 
     public static void ClearAll() {
         for (int i = 0; i < Width; i++) {
