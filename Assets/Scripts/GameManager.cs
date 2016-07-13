@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public static float GameTime = Time.time;
+    public static float GameTime;
 
 	// Use this for initialization
 	void Start () {
