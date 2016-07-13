@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -56,7 +57,10 @@ public class SoundManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public void changeTheme() {
+    public void HandleThemeChanged(object sender, EventArgs args) {
+        if (theme) {
+            theme.Stop();
+        }
         if (!left) {
             left = gameObject.AddComponent<AudioSource>();
             left.volume = 0.05f;
@@ -78,12 +82,13 @@ public class SoundManager : MonoBehaviour {
             hit = gameObject.AddComponent<AudioSource>();
         }
         clear = new List<AudioSource>();
+
         for (int i = 1; i <= 5; i++) {
             clear.Add(gameObject.AddComponent<AudioSource>());
             clear[i - 1].volume = 0.3f;
         }
 
-        string themePathPrefix = "Themes/" + ThemeManager.CurrentThemeName + "/Sound/";
+        string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
 
         left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
         right.clip = Resources.Load(themePathPrefix + "right") as AudioClip;
@@ -95,6 +100,7 @@ public class SoundManager : MonoBehaviour {
             clear[i-1].clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
         }
         GetNewClearIterator();
+        PlaySound(Sound.Theme);
     }
 
     public void PlaySound(Sound sound) {

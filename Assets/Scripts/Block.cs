@@ -47,24 +47,24 @@ public class Block : MonoBehaviour {
         if (value == State.ToBeErased) {
             switch (Type) {
                 case 0:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block0ToBeErased;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0ToBeErased;
                     break;
                 case 1:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1ToBeErased;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1ToBeErased;
                     break;
             }
         }
         else if (value == State.InsideCurrentStreak) {
-            gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.InsideClearance;
+            gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.InsideClearance;
         }
         else if (value == State.Normal) {
             switch (Type) {
                 case 0:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block0;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
                     gameObject.GetComponent<Block>().Type = 0;
                     break;
                 case 1:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.CurrentTheme.Block1;
+                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
                     gameObject.GetComponent<Block>().Type = 1;
                     break;
             }

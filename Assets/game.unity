@@ -155,10 +155,6 @@ GameObject:
   - 20: {fileID: 727353659}
   - 92: {fileID: 727353658}
   - 124: {fileID: 727353657}
-  - 81: {fileID: 727353656}
-  - 114: {fileID: 727353661}
-  - 114: {fileID: 727353662}
-  - 114: {fileID: 727353663}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -166,13 +162,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &727353656
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 727353655}
-  m_Enabled: 1
 --- !u!124 &727353657
 Behaviour:
   m_ObjectHideFlags: 0
@@ -234,46 +223,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &727353661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 727353655}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de29c2a16b35204cb2cf7ad2b6d4d1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Themes:
-  - Block0: {fileID: 21300000, guid: cf190dd514595ab43b33bbcd3b3dc07a, type: 3}
-    Block1: {fileID: 21300000, guid: 88b100a93bec0044aa67dc0e4a5ca334, type: 3}
-    Block0ToBeErased: {fileID: 21300000, guid: 79270e2192ccb0442afa2678070cbef3, type: 3}
-    Block1ToBeErased: {fileID: 21300000, guid: 24985e821495ebd42b1a841579ecf34f, type: 3}
-    InsideClearance: {fileID: 21300000, guid: 367b1b3d8253cb640af7f197c5c7b46d, type: 3}
-    ThemeName: Star
---- !u!114 &727353662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 727353655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966eb06045d6d6c4b8234c76cf2f10ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &727353663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 727353655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51273ef91f225254faad9d0864d9e012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1048177208
 GameObject:
   m_ObjectHideFlags: 0

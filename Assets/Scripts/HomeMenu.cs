@@ -6,7 +6,7 @@ public class HomeMenu : MonoBehaviour {
 
     void Update() {
         if (Input.anyKeyDown) {
-            SceneManager.LoadScene("game");
+            GameManager.Instance.Voyage();
         }
     }
 }
