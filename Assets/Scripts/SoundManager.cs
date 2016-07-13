@@ -3,8 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour {
-    public static SoundManager Instance = null;
+    public static SoundManager _instance;
 
+    public static SoundManager Instance {
+        get {
+            if (_instance == null) {
+                _instance = GameObject.FindObjectOfType<SoundManager>();
+
+                //Tell unity not to destroy this object when loading a new scene!
+                DontDestroyOnLoad(_instance.gameObject);
+            }
+
+            return _instance;
+        }
+    }
 
     private AudioSource left;
     private AudioSource right;
@@ -12,7 +24,7 @@ public class SoundManager : MonoBehaviour {
     private AudioSource clockwise;
     private AudioSource anticlockwise;
     private AudioSource hit;
-    private List<AudioSource> clear = new List<AudioSource>();
+    private List<AudioSource> clear;
     private List<AudioSource>.Enumerator clearIterator;
     private float lastClear = GameManager.GameTime;
 
@@ -29,13 +41,13 @@ public class SoundManager : MonoBehaviour {
 
     void Awake() {
         //Check if instance already exists
-        if (Instance == null)
+        if (_instance == null)
 
             //if not, set instance to this
-            Instance = this;
+            _instance = this;
 
         //If instance already exists and it's not this:
-        else if (Instance != this)
+        else if (_instance != this)
 
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
@@ -65,6 +77,7 @@ public class SoundManager : MonoBehaviour {
         if (!hit) {
             hit = gameObject.AddComponent<AudioSource>();
         }
+        clear = new List<AudioSource>();
         for (int i = 1; i <= 5; i++) {
             clear.Add(gameObject.AddComponent<AudioSource>());
             clear[i - 1].volume = 0.3f;
