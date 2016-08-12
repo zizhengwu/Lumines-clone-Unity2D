@@ -15,7 +15,6 @@ public class Group : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        Grid.CurrentGroup = transform;
         foreach (Transform child in transform) {
             GameObject c = child.gameObject;
             switch (types[Random.Range(0, 2)]) {
@@ -29,6 +28,10 @@ public class Group : MonoBehaviour {
                     break;
             }
         }
+    }
+
+    public void MakeItCurrentGroup() {
+        Grid.CurrentGroup = transform;
     }
 
     bool GroupIsValidGridPosition(Vector3 GroupVector) {
@@ -50,6 +53,9 @@ public class Group : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (transform != Grid.CurrentGroup) {
+            return;
+        }
         // Clockwise Rotate
         if (Input.GetKeyDown(KeyCode.K)) {
             foreach (Transform child in transform) {

@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour {
     public void GameOver() {
         Debug.Log("gameover");
         ThemeManager.Instance.CurrentThemeName = "Menu";
+        NextQueue.Instance.GameOver();
         Grid.GameOver();
         SceneManager.LoadScene("start");
     }

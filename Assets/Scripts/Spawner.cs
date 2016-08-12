@@ -3,8 +3,6 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour {
 
-    public GameObject[] groups;
-
 	// Use this for initialization
 	void Start () {
         spawnNext();
@@ -16,8 +14,8 @@ public class Spawner : MonoBehaviour {
 	}
 
     public void spawnNext() {
-        int i = Random.Range(0, groups.Length);
-
-        Instantiate(groups[i], transform.position, Quaternion.identity);
+        Transform group = NextQueue.Instance.ReturnNext();
+        group.transform.position = transform.position;
+        group.GetComponent<Group>().MakeItCurrentGroup();
     }
 }
