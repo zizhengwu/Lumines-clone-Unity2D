@@ -174,7 +174,6 @@ public class Group : MonoBehaviour {
                         throw new System.Exception();
                     }
                     if (downwardsGridY >= 10) {
-                        enabled = false;
                         GameManager.Instance.GameOver();
                         return;
                     }
