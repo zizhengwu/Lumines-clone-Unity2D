@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Block : MonoBehaviour {
 
@@ -49,6 +48,7 @@ public class Block : MonoBehaviour {
                 case 0:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0ToBeErased;
                     break;
+
                 case 1:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1ToBeErased;
                     break;
@@ -63,6 +63,7 @@ public class Block : MonoBehaviour {
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
                     gameObject.GetComponent<Block>().Type = 0;
                     break;
+
                 case 1:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
                     gameObject.GetComponent<Block>().Type = 1;
@@ -72,16 +73,15 @@ public class Block : MonoBehaviour {
     }
 
     // Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    if (GoDown) {
-	        DownToDepth();
-	    }
-	}
+    private void Start() {
+    }
+
+    // Update is called once per frame
+    private void Update() {
+        if (GoDown) {
+            DownToDepth();
+        }
+    }
 
     public bool IsSameType(Block other) {
         return Type == other.Type;

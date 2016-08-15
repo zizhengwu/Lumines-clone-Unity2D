@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class NextQueue : MonoBehaviour {
     public GameObject group;
@@ -21,7 +20,7 @@ public class NextQueue : MonoBehaviour {
         }
     }
 
-    void Awake() {
+    private void Awake() {
         //Check if instance already exists
         if (_instance == null)
 
@@ -38,16 +37,13 @@ public class NextQueue : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-
     // Use this for initialization
-    void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
+    private void Start() {
+    }
+
+    // Update is called once per frame
+    private void Update() {
+    }
 
     public void GameOver() {
         _groups = null;

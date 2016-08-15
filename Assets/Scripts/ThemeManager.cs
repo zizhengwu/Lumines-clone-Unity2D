@@ -1,11 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using System.ComponentModel;
 using Random = UnityEngine.Random;
 
 public class ThemeManager : MonoBehaviour {
-
     public Theme[] Themes;
     public Theme CurrentTheme;
     private string _currentThemeName;
@@ -37,7 +34,7 @@ public class ThemeManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Awake() {
+    private void Awake() {
         if (_instance == null) {
             //If I am the first instance, make me the Singleton
             _instance = this;
@@ -58,7 +55,6 @@ public class ThemeManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-
+    private void Update() {
     }
 }

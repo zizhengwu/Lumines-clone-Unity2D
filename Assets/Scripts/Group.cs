@@ -1,11 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Group : MonoBehaviour {
-
-    private int[] types = {0, 1};
+    private int[] types = { 0, 1 };
     private static float _lastFall = GameManager.GameTime;
     private float _lastLeft = GameManager.GameTime;
     private float _lastRight = GameManager.GameTime;
@@ -14,7 +11,7 @@ public class Group : MonoBehaviour {
     public int blocksRemaining = 4;
 
     // Use this for initialization
-    void Start() {
+    private void Start() {
         foreach (Transform child in transform) {
             GameObject c = child.gameObject;
             switch (types[Random.Range(0, 2)]) {
@@ -22,6 +19,7 @@ public class Group : MonoBehaviour {
                     c.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
                     c.GetComponent<Block>().Type = 0;
                     break;
+
                 case 1:
                     c.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
                     c.GetComponent<Block>().Type = 1;
@@ -34,8 +32,8 @@ public class Group : MonoBehaviour {
         Grid.CurrentGroup = transform;
     }
 
-    bool GroupIsValidGridPosition(Vector3 GroupVector) {
-        Vector2[] children = {new Vector2(GroupVector.x + 0.5f, GroupVector.y + 0.5f), new Vector2(GroupVector.x + 0.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 0.5f)};
+    private bool GroupIsValidGridPosition(Vector3 GroupVector) {
+        Vector2[] children = { new Vector2(GroupVector.x + 0.5f, GroupVector.y + 0.5f), new Vector2(GroupVector.x + 0.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 0.5f) };
         foreach (Vector2 child in children) {
             Vector2 v = Grid.RoundVector2(child);
 
@@ -52,7 +50,7 @@ public class Group : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         if (transform != Grid.CurrentGroup) {
             return;
         }
@@ -111,7 +109,7 @@ public class Group : MonoBehaviour {
                     consecutiveLeft = true;
                     _lastLeft += 0.2f;
                 }
-                
+
                 if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
                     transform.position += new Vector3(-1, 0, 0);
                 }
@@ -165,10 +163,10 @@ public class Group : MonoBehaviour {
                     Vector2 gridV = Grid.RoundVector2(child.position);
                     int downwardsGridY;
                     if (v.y == 0.5) {
-                        downwardsGridY = columnsHeight[(int) gridV.x];
+                        downwardsGridY = columnsHeight[(int)gridV.x];
                     }
                     else if (v.y == 1.5) {
-                        downwardsGridY = columnsHeight[(int) gridV.x] + 1;
+                        downwardsGridY = columnsHeight[(int)gridV.x] + 1;
                     }
                     else {
                         throw new System.Exception();
@@ -178,16 +176,15 @@ public class Group : MonoBehaviour {
                         return;
                     }
                     child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
-                    Grid.grid[(int) gridV.x, downwardsGridY] = child;
+                    Grid.grid[(int)gridV.x, downwardsGridY] = child;
                     blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
                     child.gameObject.GetComponent<Block>().GoDown = true;
                 }
 
-                Grid.JudgeClearAtColumn((int) transform.position.x - 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 1);
-                Grid.JudgeClearAtColumn((int) transform.position.x + 2);
-
+                Grid.JudgeClearAtColumn((int)transform.position.x - 1);
+                Grid.JudgeClearAtColumn((int)transform.position.x);
+                Grid.JudgeClearAtColumn((int)transform.position.x + 1);
+                Grid.JudgeClearAtColumn((int)transform.position.x + 2);
             }
             if (blocksCoordinate.Count != 0) {
                 if (Grid.BlocksInsideClearance(blocksCoordinate)) {

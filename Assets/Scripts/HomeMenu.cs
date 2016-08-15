@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class HomeMenu : MonoBehaviour {
 
-    void Update() {
+    private void Update() {
         if (Input.anyKeyDown) {
             GameManager.Instance.Voyage();
         }

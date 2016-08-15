@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
@@ -18,7 +17,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void Awake() {
+    private void Awake() {
         //Check if instance already exists
         if (_instance == null)
 
@@ -37,10 +36,9 @@ public class GameManager : MonoBehaviour {
 
     public static float GameTime;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    private void Start() {
+    }
 
     public void Voyage() {
         ThemeManager.Instance.RandomTheme();
@@ -56,7 +54,7 @@ public class GameManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-	    GameTime = Time.time;
-	}
+    private void Update() {
+        GameTime = Time.time;
+    }
 }

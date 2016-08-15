@@ -1,12 +1,12 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class Grid : MonoBehaviour {
+
     // Grid size
     public static int Width = 16;
+
     public static int Height = 12;
 
     public static Transform[,] grid = new Transform[Width, Height];
@@ -16,8 +16,7 @@ public class Grid : MonoBehaviour {
     public static Transform CurrentGroup;
 
     // Use this for initialization
-    void Start() {
-
+    private void Start() {
     }
 
     public static void GameOver() {
@@ -27,14 +26,12 @@ public class Grid : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-
+    private void Update() {
     }
 
     public static bool BlocksInsideClearance(List<IntVector2> coordinates) {
         foreach (IntVector2 coordinate in coordinates) {
-            if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased)
-            {
+            if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
                 return true;
             }
         }
@@ -73,7 +70,7 @@ public class Grid : MonoBehaviour {
                 if (columnRight < Width) {
                     potentialColumns.Add(columnRight);
                 }
-                
+
                 foreach (int potentialColumn in potentialColumns) {
                     if (grid[potentialColumn, h] && grid[potentialColumn, h + 1] &&
                         grid[potentialColumn, h].gameObject.GetComponent<Block>()
@@ -105,8 +102,6 @@ public class Grid : MonoBehaviour {
             JudgeClearAtColumn(i);
         }
     }
-
-
 
     public static void ClearAll() {
         for (int i = 0; i < Width; i++) {
@@ -157,7 +152,6 @@ public class Grid : MonoBehaviour {
             coordinatesToBeCleared = new List<IntVector2>();
         }
         coordinatesToBeCleared.AddRange(currentColumn);
-        
     }
 
     private static void FallDownAtColumn(int column) {
@@ -175,7 +169,6 @@ public class Grid : MonoBehaviour {
                 current += 1;
             }
             else {
-                
             }
         }
     }

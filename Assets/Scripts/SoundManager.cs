@@ -1,7 +1,6 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SoundManager : MonoBehaviour {
     public static SoundManager _instance;
@@ -39,8 +38,7 @@ public class SoundManager : MonoBehaviour {
         Clear
     }
 
-
-    void Awake() {
+    private void Awake() {
         //Check if instance already exists
         if (_instance == null)
 
@@ -97,7 +95,7 @@ public class SoundManager : MonoBehaviour {
         anticlockwise.clip = Resources.Load(themePathPrefix + "anticlockwise") as AudioClip;
         hit.clip = Resources.Load(themePathPrefix + "hit") as AudioClip;
         for (int i = 1; i <= 5; i++) {
-            clear[i-1].clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
+            clear[i - 1].clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
         }
         GetNewClearIterator();
         PlaySound(Sound.Theme);
@@ -128,8 +126,7 @@ public class SoundManager : MonoBehaviour {
                 clearIterator.Current.Play();
                 clearIterator.MoveNext();
             }
-            else
-            {
+            else {
                 clearIterator.Current.Play();
                 if (!clearIterator.MoveNext()) {
                     GetNewClearIterator();
@@ -137,7 +134,6 @@ public class SoundManager : MonoBehaviour {
             }
             lastClear = GameManager.GameTime;
         }
-
     }
 
     public void GetNewClearIterator() {
@@ -146,12 +142,10 @@ public class SoundManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private void Start() {
+    }
+
+    // Update is called once per frame
+    private void Update() {
+    }
 }
