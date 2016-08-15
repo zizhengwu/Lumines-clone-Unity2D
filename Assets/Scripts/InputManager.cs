@@ -43,15 +43,23 @@ public class InputManager : MonoBehaviour {
         if (Grid.CurrentGroup == null) {
             return;
         }
-        if (Input.GetMouseButton(0)) {
-            Vector2 position = ScreenToGridPoint(Input.mousePosition);
-            if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
-                Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+        // Handle native touch events
+        foreach (Touch touch in Input.touches) {
+            HandleTouch(touch.fingerId, touch.position, touch.phase);
+        }
+        // Simulate touch events from mouse events
+        if (Input.touchCount == 0) {
+            if (Input.GetMouseButtonDown(0)) {
+                HandleTouch(10, Input.mousePosition, TouchPhase.Began);
             }
-            else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
-                Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+            if (Input.GetMouseButton(0)) {
+                HandleTouch(10, Input.mousePosition, TouchPhase.Moved);
+            }
+            if (Input.GetMouseButtonUp(0)) {
+                HandleTouch(10, Input.mousePosition, TouchPhase.Ended);
             }
         }
+        // Keyboard
         if (Input.GetKeyDown(KeyCode.A)) {
             Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
         }
@@ -66,6 +74,29 @@ public class InputManager : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.J)) {
             Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
+        }
+    }
+
+    private void HandleTouch(int touchFingerId, Vector3 touchPosition, TouchPhase touchPhase) {
+        switch (touchPhase) {
+            case TouchPhase.Began:
+                // TODO
+                break;
+
+            case TouchPhase.Moved:
+                // TODO
+                Vector2 position = ScreenToGridPoint(touchPosition);
+                if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
+                    Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+                }
+                else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
+                    Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+                }
+                break;
+
+            case TouchPhase.Ended:
+                // TODO
+                break;
         }
     }
 
