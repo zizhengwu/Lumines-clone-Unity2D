@@ -3,6 +3,9 @@
 public class InputManager : MonoBehaviour {
     private static InputManager _instance = null;
 
+    private int moveFingerId = -1;
+    private int downFingerId = -1;
+
     public static InputManager Instance {
         get {
             if (_instance == null) {
@@ -78,14 +81,39 @@ public class InputManager : MonoBehaviour {
     }
 
     private void HandleTouch(int touchFingerId, Vector3 touchPosition, TouchPhase touchPhase) {
+        Vector2 position = ScreenToGridPoint(touchPosition);
+        var x = position.x;
+        var y = position.y;
         switch (touchPhase) {
             case TouchPhase.Began:
-                // TODO
+                if (x > 17) {
+                    if (y < 5) {
+                        downFingerId = touchFingerId;
+                    }
+                    else {
+                        if (x < 19) {
+                            Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
+                        }
+                        else {
+                            Grid.CurrentGroup.GetComponent<Group>().ClockwiseRotate();
+                        }
+                    }
+                }
+                if (x < 16 && x >= -1) {
+                    moveFingerId = touchFingerId;
+                }
+                break;
+
+            case TouchPhase.Stationary:
+                if (touchFingerId == downFingerId) {
+                    Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+                }
                 break;
 
             case TouchPhase.Moved:
-                // TODO
-                Vector2 position = ScreenToGridPoint(touchPosition);
+                if (touchFingerId != moveFingerId) {
+                    break;
+                }
                 if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
                     Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
                 }
@@ -95,7 +123,12 @@ public class InputManager : MonoBehaviour {
                 break;
 
             case TouchPhase.Ended:
-                // TODO
+                if (touchFingerId == moveFingerId) {
+                    moveFingerId = -1;
+                }
+                if (touchFingerId == downFingerId) {
+                    downFingerId = -1;
+                }
                 break;
         }
     }
