@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class Group : MonoBehaviour {
     private int[] types = { 0, 1 };
-    private static float _lastFall = GameManager.GameTime;
-    private float _lastLeft = GameManager.GameTime;
-    private float _lastRight = GameManager.GameTime;
-    private bool consecutiveLeft = false;
-    private bool consecutiveRight = false;
     public int blocksRemaining = 4;
 
     // Use this for initialization
@@ -49,148 +44,112 @@ public class Group : MonoBehaviour {
         return true;
     }
 
-    // Update is called once per frame
-    private void Update() {
-        if (transform != Grid.CurrentGroup) {
-            return;
+    public void MoveLeft() {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.Left);
+
+        if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
+            transform.position += new Vector3(-1, 0, 0);
         }
-        // Clockwise Rotate
-        if (Input.GetKeyDown(KeyCode.K)) {
+    }
+
+    public void MoveRight() {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.Right);
+
+        if (GroupIsValidGridPosition(transform.position + new Vector3(1, 0, 0))) {
+            transform.position += new Vector3(1, 0, 0);
+        }
+    }
+
+    public void MoveDown() {
+        List<IntVector2> blocksCoordinate = new List<IntVector2>();
+        if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
+            transform.position += new Vector3(0, -1, 0);
+        }
+        else {
+            Grid.CurrentGroup = null;
+            FindObjectOfType<Spawner>().spawnNext();
+
+            int[] columnsHeight = Grid.ColumnFullUntilHeight();
             foreach (Transform child in transform) {
                 Vector3 v = child.localPosition;
-
-                if (v.x == 0.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
+                Vector2 gridV = Grid.RoundVector2(child.position);
+                int downwardsGridY;
+                if (v.y == 0.5) {
+                    downwardsGridY = columnsHeight[(int)gridV.x];
                 }
-                else if (v.x == 1.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
-                }
-                else if (v.x == 0.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
+                else if (v.y == 1.5) {
+                    downwardsGridY = columnsHeight[(int)gridV.x] + 1;
                 }
                 else {
                     throw new System.Exception();
                 }
+                if (downwardsGridY >= 10) {
+                    GameManager.Instance.GameOver();
+                    return;
+                }
+                child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
+                Grid.grid[(int)gridV.x, downwardsGridY] = child;
+                blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
+                child.gameObject.GetComponent<Block>().GoDown = true;
+            }
+
+            Grid.JudgeClearAtColumn((int)transform.position.x - 1);
+            Grid.JudgeClearAtColumn((int)transform.position.x);
+            Grid.JudgeClearAtColumn((int)transform.position.x + 1);
+            Grid.JudgeClearAtColumn((int)transform.position.x + 2);
+        }
+        if (blocksCoordinate.Count != 0) {
+            if (Grid.BlocksInsideClearance(blocksCoordinate)) {
+                SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
             }
         }
+    }
 
-        // Anticlockwise Rotate
-        else if (Input.GetKeyDown(KeyCode.J)) {
-            foreach (Transform child in transform) {
-                Vector3 v = child.localPosition;
+    public void ClockwiseRotate() {
+        foreach (Transform child in transform) {
+            Vector3 v = child.localPosition;
 
-                if (v.x == 0.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(0.5f, 0.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 1.5) {
-                    child.localPosition = new Vector3(0.5f, 1.5f, v.z);
-                }
-                else if (v.x == 1.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(1.5f, 1.5f, v.z);
-                }
-                else if (v.x == 0.5 && v.y == 0.5) {
-                    child.localPosition = new Vector3(1.5f, 0.5f, v.z);
-                }
-                else {
-                    throw new System.Exception();
-                }
+            if (v.x == 0.5 && v.y == 1.5) {
+                child.localPosition = new Vector3(1.5f, 1.5f, v.z);
             }
-        }
-
-        // Move Left
-        else if (Input.GetKey(KeyCode.A)) {
-            if ((consecutiveLeft && GameManager.GameTime - _lastLeft >= 0.03) || !consecutiveLeft) {
-                SoundManager.Instance.PlaySound(SoundManager.Sound.Left);
-                _lastLeft = GameManager.GameTime;
-                if (!consecutiveLeft) {
-                    consecutiveLeft = true;
-                    _lastLeft += 0.2f;
-                }
-
-                if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
-                    transform.position += new Vector3(-1, 0, 0);
-                }
+            else if (v.x == 1.5 && v.y == 1.5) {
+                child.localPosition = new Vector3(1.5f, 0.5f, v.z);
             }
-        }
-        else if (Input.GetKeyUp(KeyCode.A)) {
-            consecutiveLeft = false;
-        }
-
-        // Move Right
-        else if (Input.GetKey(KeyCode.D)) {
-            SoundManager.Instance.PlaySound(SoundManager.Sound.Right);
-            if ((consecutiveRight && GameManager.GameTime - _lastRight >= 0.03) || !consecutiveRight) {
-                _lastRight = GameManager.GameTime;
-                if (!consecutiveRight) {
-                    consecutiveRight = true;
-                    _lastRight += 0.2f;
-                }
-
-                if (GroupIsValidGridPosition(transform.position + new Vector3(1, 0, 0))) {
-                    transform.position += new Vector3(1, 0, 0);
-                }
+            else if (v.x == 1.5 && v.y == 0.5) {
+                child.localPosition = new Vector3(0.5f, 0.5f, v.z);
             }
-        }
-        else if (Input.GetKeyUp(KeyCode.D)) {
-            consecutiveRight = false;
-        }
-
-        // Move Down
-        if ((Input.GetKey(KeyCode.S) && GameManager.GameTime - _lastFall >= 0.03) || GameManager.GameTime - _lastFall >= 1) {
-            _lastFall = GameManager.GameTime;
-            List<IntVector2> blocksCoordinate = new List<IntVector2>();
-            if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
-                transform.position += new Vector3(0, -1, 0);
-                //BlocksCoordinate.AddRange(new List<IntVector2>() {
-                //    new IntVector2((int)Grid.RoundVector2(transform.position).x, (int)Grid.RoundVector2(transform.position).y),
-                //    new IntVector2((int)Grid.RoundVector2(transform.position).x + 1, (int)Grid.RoundVector2(transform.position).y),
-                //    new IntVector2((int)Grid.RoundVector2(transform.position).x, (int)Grid.RoundVector2(transform.position).y + 1),
-                //    new IntVector2((int)Grid.RoundVector2(transform.position).x + 1, (int)Grid.RoundVector2(transform.position).y + 1)
-                //});
-                // It's valid. Update grid.
+            else if (v.x == 0.5 && v.y == 0.5) {
+                child.localPosition = new Vector3(0.5f, 1.5f, v.z);
             }
             else {
-                enabled = false;
-                _lastFall += 0.2f;
-                FindObjectOfType<Spawner>().spawnNext();
-
-                int[] columnsHeight = Grid.ColumnFullUntilHeight();
-                foreach (Transform child in transform) {
-                    Vector3 v = child.localPosition;
-                    Vector2 gridV = Grid.RoundVector2(child.position);
-                    int downwardsGridY;
-                    if (v.y == 0.5) {
-                        downwardsGridY = columnsHeight[(int)gridV.x];
-                    }
-                    else if (v.y == 1.5) {
-                        downwardsGridY = columnsHeight[(int)gridV.x] + 1;
-                    }
-                    else {
-                        throw new System.Exception();
-                    }
-                    if (downwardsGridY >= 10) {
-                        GameManager.Instance.GameOver();
-                        return;
-                    }
-                    child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
-                    Grid.grid[(int)gridV.x, downwardsGridY] = child;
-                    blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
-                    child.gameObject.GetComponent<Block>().GoDown = true;
-                }
-
-                Grid.JudgeClearAtColumn((int)transform.position.x - 1);
-                Grid.JudgeClearAtColumn((int)transform.position.x);
-                Grid.JudgeClearAtColumn((int)transform.position.x + 1);
-                Grid.JudgeClearAtColumn((int)transform.position.x + 2);
-            }
-            if (blocksCoordinate.Count != 0) {
-                if (Grid.BlocksInsideClearance(blocksCoordinate)) {
-                    SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
-                }
+                throw new System.Exception();
             }
         }
+    }
+
+    public void AnticlockwiseRotate() {
+        foreach (Transform child in transform) {
+            Vector3 v = child.localPosition;
+
+            if (v.x == 0.5 && v.y == 1.5) {
+                child.localPosition = new Vector3(0.5f, 0.5f, v.z);
+            }
+            else if (v.x == 1.5 && v.y == 1.5) {
+                child.localPosition = new Vector3(0.5f, 1.5f, v.z);
+            }
+            else if (v.x == 1.5 && v.y == 0.5) {
+                child.localPosition = new Vector3(1.5f, 1.5f, v.z);
+            }
+            else if (v.x == 0.5 && v.y == 0.5) {
+                child.localPosition = new Vector3(1.5f, 0.5f, v.z);
+            }
+            else {
+                throw new System.Exception();
+            }
+        }
+    }
+
+    // Update is called once per frame
+    private void Update() {
     }
 }
