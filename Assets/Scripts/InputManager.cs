@@ -84,11 +84,21 @@ public class InputManager : MonoBehaviour {
         Vector2 position = ScreenToGridPoint(touchPosition);
         var x = position.x;
         var y = position.y;
+        if (touchFingerId == downFingerId) {
+            if (touchPhase == TouchPhase.Ended) {
+                downFingerId = -1;
+            }
+            else {
+                Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+            }
+            return;
+        }
         switch (touchPhase) {
             case TouchPhase.Began:
                 if (x > 17) {
                     if (y < 5) {
                         downFingerId = touchFingerId;
+                        Grid.CurrentGroup.GetComponent<Group>().MoveDown();
                     }
                     else {
                         if (x < 19) {
@@ -101,12 +111,6 @@ public class InputManager : MonoBehaviour {
                 }
                 if (x < 16 && x >= -1) {
                     moveFingerId = touchFingerId;
-                }
-                break;
-
-            case TouchPhase.Stationary:
-                if (touchFingerId == downFingerId) {
-                    Grid.CurrentGroup.GetComponent<Group>().MoveDown();
                 }
                 break;
 
@@ -125,9 +129,6 @@ public class InputManager : MonoBehaviour {
             case TouchPhase.Ended:
                 if (touchFingerId == moveFingerId) {
                     moveFingerId = -1;
-                }
-                if (touchFingerId == downFingerId) {
-                    downFingerId = -1;
                 }
                 break;
         }
