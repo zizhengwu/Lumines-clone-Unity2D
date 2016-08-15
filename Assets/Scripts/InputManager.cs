@@ -39,6 +39,9 @@ public class InputManager : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {
+        if (Input.GetMouseButton(0)) {
+            Debug.Log(string.Format("mouse: {0}", ScreenToGridPoint(Input.mousePosition)));
+        }
         // control group here
         if (Grid.CurrentGroup == null) {
             return;
@@ -58,5 +61,10 @@ public class InputManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.J)) {
             Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
         }
+    }
+
+    public Vector3 ScreenToGridPoint(Vector3 position) {
+        Vector3 wordPoint = Camera.main.ScreenToWorldPoint(position);
+        return 8f / 5f * wordPoint + new Vector3(8, 7, 10);
     }
 }
