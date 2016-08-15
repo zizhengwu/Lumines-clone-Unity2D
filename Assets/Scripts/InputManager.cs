@@ -39,12 +39,18 @@ public class InputManager : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {
-        if (Input.GetMouseButton(0)) {
-            Debug.Log(string.Format("mouse: {0}", ScreenToGridPoint(Input.mousePosition)));
-        }
         // control group here
         if (Grid.CurrentGroup == null) {
             return;
+        }
+        if (Input.GetMouseButton(0)) {
+            Vector2 position = ScreenToGridPoint(Input.mousePosition);
+            if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
+                Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+            }
+            else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
+                Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+            }
         }
         if (Input.GetKeyDown(KeyCode.A)) {
             Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
