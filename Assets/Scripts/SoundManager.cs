@@ -83,7 +83,6 @@ public class SoundManager : MonoBehaviour {
 
         for (int i = 1; i <= 5; i++) {
             clear.Add(gameObject.AddComponent<AudioSource>());
-            clear[i - 1].volume = 0.3f;
         }
 
         string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
