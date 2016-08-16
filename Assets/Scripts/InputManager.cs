@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class InputManager : MonoBehaviour {
     private static InputManager _instance = null;
 
     private int moveFingerId = -1;
     private int downFingerId = -1;
+    private bool moveFingerReady = true;
+    private bool downFingerReady = true;
+    private Transform PreGroup = null;
 
     public static InputManager Instance {
         get {
@@ -84,12 +88,26 @@ public class InputManager : MonoBehaviour {
         Vector2 position = ScreenToGridPoint(touchPosition);
         var x = position.x;
         var y = position.y;
+        if (PreGroup == null) {
+            PreGroup = Grid.CurrentGroup;
+        }
+        if (PreGroup != null && Grid.CurrentGroup != PreGroup) {
+            if (moveFingerId != -1) {
+                moveFingerReady = false;
+            }
+            if (downFingerId != -1) {
+                downFingerReady = false;
+            }
+            PreGroup = Grid.CurrentGroup;
+            return;
+        }
         // downFinger is pressing
         if (touchFingerId == downFingerId) {
             if (touchPhase == TouchPhase.Ended) {
                 downFingerId = -1;
+                downFingerReady = true;
             }
-            else {
+            else if (downFingerReady) {
                 Grid.CurrentGroup.GetComponent<Group>().MoveDown();
             }
             return;
@@ -115,7 +133,7 @@ public class InputManager : MonoBehaviour {
             }
         }
         // move only applies to moveFinger
-        else if (touchPhase == TouchPhase.Moved && touchFingerId == moveFingerId) {
+        else if (touchPhase == TouchPhase.Moved && touchFingerId == moveFingerId && moveFingerReady) {
             if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
                 Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
             }
@@ -127,6 +145,7 @@ public class InputManager : MonoBehaviour {
         else if (touchPhase == TouchPhase.Ended) {
             if (touchFingerId == moveFingerId) {
                 moveFingerId = -1;
+                moveFingerReady = true;
             }
         }
     }
