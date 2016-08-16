@@ -3,15 +3,17 @@
 public class InputManager : MonoBehaviour {
     private static InputManager _instance = null;
 
-    private int moveFingerId = -1;
-    private int downFingerId = -1;
-    private bool moveFingerReady = true;
-    private bool downFingerReady = true;
-    private Transform PreGroup = null;
-    public float screenWidth;
-    public float screenHeight;
-    private float clockAndAntiBoundary;
-    private float upDownBoundary;
+    private int _moveFingerId = -1;
+    private int _downFingerId = -1;
+    private bool _moveFingerReady = true;
+    private bool _downFingerReady = true;
+    private Transform _preGroup = null;
+    public float ScreenWidth;
+    public float ScreenHeight;
+    public float FallThreshold = 0.7f;
+    private float _clockAndAntiBoundary;
+    private float _upDownBoundary;
+    private float _lastFall;
 
     public static InputManager Instance {
         get {
@@ -45,11 +47,16 @@ public class InputManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
-        Vector3 rightUp = ScreenToGridPoint(new Vector3(screenWidth, screenHeight, -10));
-        clockAndAntiBoundary = (rightUp.x + 16.5f) / 2;
-        upDownBoundary = rightUp.y / 2;
+        updateBoundaray();
+        _lastFall = GameManager.GameTime;
+    }
+
+    private void updateBoundaray() {
+        ScreenWidth = Screen.width;
+        ScreenHeight = Screen.height;
+        Vector3 rightUp = ScreenToGridPoint(new Vector3(ScreenWidth, ScreenHeight, -10));
+        _clockAndAntiBoundary = (rightUp.x + 16.5f) / 2;
+        _upDownBoundary = rightUp.y / 2;
     }
 
     // Update is called once per frame
@@ -90,45 +97,55 @@ public class InputManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.J)) {
             Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
         }
+        if (GameManager.GameTime - _lastFall > FallThreshold) {
+            Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+            updateLastFall();
+        }
+    }
+
+    private void updateLastFall() {
+        _lastFall = GameManager.GameTime;
     }
 
     private void HandleTouch(int touchFingerId, Vector3 touchPosition, TouchPhase touchPhase) {
         Vector2 position = ScreenToGridPoint(touchPosition);
         var x = position.x;
         var y = position.y;
-        if (PreGroup == null) {
-            PreGroup = Grid.CurrentGroup;
+        if (_preGroup == null) {
+            _preGroup = Grid.CurrentGroup;
         }
-        if (PreGroup != null && Grid.CurrentGroup != PreGroup) {
-            if (moveFingerId != -1) {
-                moveFingerReady = false;
+        if (_preGroup != null && Grid.CurrentGroup != _preGroup) {
+            if (_moveFingerId != -1) {
+                _moveFingerReady = false;
             }
-            if (downFingerId != -1) {
-                downFingerReady = false;
+            if (_downFingerId != -1) {
+                _downFingerReady = false;
             }
-            PreGroup = Grid.CurrentGroup;
+            _preGroup = Grid.CurrentGroup;
             return;
         }
         // downFinger is pressing
-        if (touchFingerId == downFingerId) {
+        if (touchFingerId == _downFingerId) {
             if (touchPhase == TouchPhase.Ended) {
-                downFingerId = -1;
-                downFingerReady = true;
+                _downFingerId = -1;
+                _downFingerReady = true;
             }
-            else if (downFingerReady) {
+            else if (_downFingerReady) {
                 Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+                updateLastFall();
             }
             return;
         }
         // begin
         if (touchPhase == TouchPhase.Began) {
             if (x > 17) {
-                if (y < upDownBoundary) {
-                    downFingerId = touchFingerId;
+                if (y < _upDownBoundary) {
+                    _downFingerId = touchFingerId;
                     Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+                    updateLastFall();
                 }
                 else {
-                    if (x < clockAndAntiBoundary) {
+                    if (x < _clockAndAntiBoundary) {
                         Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
                     }
                     else {
@@ -137,11 +154,11 @@ public class InputManager : MonoBehaviour {
                 }
             }
             else if (x < 16 && x >= -1) {
-                moveFingerId = touchFingerId;
+                _moveFingerId = touchFingerId;
             }
         }
         // move only applies to moveFinger
-        else if (touchPhase == TouchPhase.Moved && touchFingerId == moveFingerId && moveFingerReady) {
+        else if (touchPhase == TouchPhase.Moved && touchFingerId == _moveFingerId && _moveFingerReady) {
             if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
                 Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
             }
@@ -151,9 +168,9 @@ public class InputManager : MonoBehaviour {
         }
         // end only applies to moveFinger
         else if (touchPhase == TouchPhase.Ended) {
-            if (touchFingerId == moveFingerId) {
-                moveFingerId = -1;
-                moveFingerReady = true;
+            if (touchFingerId == _moveFingerId) {
+                _moveFingerId = -1;
+                _moveFingerReady = true;
             }
         }
     }
