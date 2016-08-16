@@ -9,6 +9,10 @@ public class InputManager : MonoBehaviour {
     private bool moveFingerReady = true;
     private bool downFingerReady = true;
     private Transform PreGroup = null;
+    public float screenWidth;
+    public float screenHeight;
+    private float clockAndAntiBoundary;
+    private float upDownBoundary;
 
     public static InputManager Instance {
         get {
@@ -42,6 +46,11 @@ public class InputManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
+        Vector3 rightUp = ScreenToGridPoint(new Vector3(screenWidth, screenHeight, -10));
+        clockAndAntiBoundary = (rightUp.x + 16.5f) / 2;
+        upDownBoundary = rightUp.y / 2;
     }
 
     // Update is called once per frame
@@ -115,12 +124,12 @@ public class InputManager : MonoBehaviour {
         // begin
         if (touchPhase == TouchPhase.Began) {
             if (x > 17) {
-                if (y < 5) {
+                if (y < upDownBoundary) {
                     downFingerId = touchFingerId;
                     Grid.CurrentGroup.GetComponent<Group>().MoveDown();
                 }
                 else {
-                    if (x < 19) {
+                    if (x < clockAndAntiBoundary) {
                         Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
                     }
                     else {
@@ -151,7 +160,11 @@ public class InputManager : MonoBehaviour {
     }
 
     public Vector3 ScreenToGridPoint(Vector3 position) {
-        Vector3 wordPoint = Camera.main.ScreenToWorldPoint(position);
-        return 8f / 5f * wordPoint + new Vector3(8, 5, 10);
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(position);
+        return NormalizeCameraPoint(worldPoint);
+    }
+
+    public Vector3 NormalizeCameraPoint(Vector3 position) {
+        return 8f / 5f * position + new Vector3(8, 5, 10);
     }
 }
