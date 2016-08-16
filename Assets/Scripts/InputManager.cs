@@ -84,6 +84,7 @@ public class InputManager : MonoBehaviour {
         Vector2 position = ScreenToGridPoint(touchPosition);
         var x = position.x;
         var y = position.y;
+        // downFinger is pressing
         if (touchFingerId == downFingerId) {
             if (touchPhase == TouchPhase.Ended) {
                 downFingerId = -1;
@@ -93,44 +94,40 @@ public class InputManager : MonoBehaviour {
             }
             return;
         }
-        switch (touchPhase) {
-            case TouchPhase.Began:
-                if (x > 17) {
-                    if (y < 5) {
-                        downFingerId = touchFingerId;
-                        Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+        // begin
+        if (touchPhase == TouchPhase.Began) {
+            if (x > 17) {
+                if (y < 5) {
+                    downFingerId = touchFingerId;
+                    Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+                }
+                else {
+                    if (x < 19) {
+                        Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
                     }
                     else {
-                        if (x < 19) {
-                            Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
-                        }
-                        else {
-                            Grid.CurrentGroup.GetComponent<Group>().ClockwiseRotate();
-                        }
+                        Grid.CurrentGroup.GetComponent<Group>().ClockwiseRotate();
                     }
                 }
-                if (x < 16 && x >= -1) {
-                    moveFingerId = touchFingerId;
-                }
-                break;
-
-            case TouchPhase.Moved:
-                if (touchFingerId != moveFingerId) {
-                    break;
-                }
-                if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
-                    Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
-                }
-                else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
-                    Grid.CurrentGroup.GetComponent<Group>().MoveRight();
-                }
-                break;
-
-            case TouchPhase.Ended:
-                if (touchFingerId == moveFingerId) {
-                    moveFingerId = -1;
-                }
-                break;
+            }
+            else if (x < 16 && x >= -1) {
+                moveFingerId = touchFingerId;
+            }
+        }
+        // move only applies to moveFinger
+        else if (touchPhase == TouchPhase.Moved && touchFingerId == moveFingerId) {
+            if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
+                Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+            }
+            else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
+                Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+            }
+        }
+        // end only applies to moveFinger
+        else if (touchPhase == TouchPhase.Ended) {
+            if (touchFingerId == moveFingerId) {
+                moveFingerId = -1;
+            }
         }
     }
 
