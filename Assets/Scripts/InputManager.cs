@@ -136,6 +136,6 @@ public class InputManager : MonoBehaviour {
 
     public Vector3 ScreenToGridPoint(Vector3 position) {
         Vector3 wordPoint = Camera.main.ScreenToWorldPoint(position);
-        return 8f / 5f * wordPoint + new Vector3(8, 7, 10);
+        return 8f / 5f * wordPoint + new Vector3(8, 5, 10);
     }
 }
