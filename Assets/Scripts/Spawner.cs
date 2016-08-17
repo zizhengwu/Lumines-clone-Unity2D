@@ -5,6 +5,7 @@ public class Spawner : MonoBehaviour {
     // Use this for initialization
     private void Start() {
         spawnNext();
+        InputManager.Instance.GameOver();
     }
 
     // Update is called once per frame
