@@ -76,6 +76,7 @@ public class Grid : MonoBehaviour {
                 return;
             }
             if (grid[column, i] && grid[column, i].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
+                Instantiate(InsideClearanceAnimationBlock, new Vector3(column + 0.5f, i + 0.5f), Quaternion.identity);
                 grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.InsideCurrentStreak;
                 ShouldClear[column, i] = true;
             }

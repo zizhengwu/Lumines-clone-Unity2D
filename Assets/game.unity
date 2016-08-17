@@ -320,6 +320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67188233c1f6cc428346d25f599a599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InsideClearanceAnimationBlock: {fileID: 1000014123053318, guid: da96e7fc2a2e99542b8cbb6e6749aa04,
+    type: 2}
 --- !u!4 &1161392850
 Transform:
   m_ObjectHideFlags: 0
