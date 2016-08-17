@@ -89,7 +89,7 @@ public class Block : MonoBehaviour {
 
     private void DownToDepth() {
         Vector3 position = transform.position;
-        Vector2 roundedPosition = Grid.RoundVector2(transform.position);
+        Vector2 roundedPosition = Grid.Instance.RoundVector2(transform.position);
         if (position.y - 0.5 > DownTarget) {
             transform.position = new Vector3(position.x, position.y - 0.4f, position.z);
         }

@@ -8,18 +8,50 @@ public class Grid : MonoBehaviour {
     public static int Width = 16;
 
     public static int Height = 12;
-
+    public GameObject InsideClearanceAnimationBlock;
     public static Transform[,] grid = new Transform[Width, Height];
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
     public static Transform CurrentGroup;
 
+    private static Grid _instance = null;
+
+    public static Grid Instance {
+        get {
+            if (_instance == null) {
+                _instance = GameObject.FindObjectOfType<Grid>();
+
+                //Tell unity not to destroy this object when loading a new scene!
+                DontDestroyOnLoad(_instance.gameObject);
+            }
+
+            return _instance;
+        }
+    }
+
+    private void Awake() {
+        //Check if instance already exists
+        if (_instance == null)
+
+            //if not, set instance to this
+            _instance = this;
+
+        //If instance already exists and it's not this:
+        else if (_instance != this)
+
+            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+            Destroy(gameObject);
+
+        //Sets this to not be destroyed when reloading scene
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Use this for initialization
     private void Start() {
     }
 
-    public static void GameOver() {
+    public void GameOver() {
         grid = new Transform[Width, Height];
         ShouldClear = new bool[Width, Height];
         coordinatesToBeCleared = new List<IntVector2>();
@@ -29,7 +61,7 @@ public class Grid : MonoBehaviour {
     private void Update() {
     }
 
-    public static bool BlocksInsideClearance(List<IntVector2> coordinates) {
+    public bool BlocksInsideClearance(List<IntVector2> coordinates) {
         foreach (IntVector2 coordinate in coordinates) {
             if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
                 return true;
@@ -38,7 +70,7 @@ public class Grid : MonoBehaviour {
         return false;
     }
 
-    public static void JudgeInsideClearanceAtColumn(int column) {
+    public void JudgeInsideClearanceAtColumn(int column) {
         for (int i = 0; i < Height; i++) {
             if (grid[column, i] == null) {
                 return;
@@ -50,7 +82,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static void JudgeClearAtColumn(int column) {
+    public void JudgeClearAtColumn(int column) {
         if (column < 0 || column >= Width) {
             return;
         }
@@ -97,13 +129,13 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static void JudgeAllColumns() {
+    public void JudgeAllColumns() {
         for (int i = 0; i < Width; i++) {
             JudgeClearAtColumn(i);
         }
     }
 
-    public static void ClearAll() {
+    public void ClearAll() {
         for (int i = 0; i < Width; i++) {
             for (int j = 0; j < Height; j++) {
                 if (ShouldClear[i, j]) {
@@ -116,7 +148,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    private static void destroyBlockAtGrid(int column, int height) {
+    private void destroyBlockAtGrid(int column, int height) {
         GameObject parent = grid[column, height].parent.gameObject;
         parent.GetComponent<Group>().blocksRemaining -= 1;
         Destroy(grid[column, height].gameObject);
@@ -127,7 +159,7 @@ public class Grid : MonoBehaviour {
         ShouldClear[column, height] = false;
     }
 
-    public static void ClearBeforeColumn(int column) {
+    public void ClearBeforeColumn(int column) {
         bool exist = false;
         List<IntVector2> currentColumn = new List<IntVector2>();
         for (int h = 0; h < Height; h++) {
@@ -154,7 +186,7 @@ public class Grid : MonoBehaviour {
         coordinatesToBeCleared.AddRange(currentColumn);
     }
 
-    private static void FallDownAtColumn(int column) {
+    private void FallDownAtColumn(int column) {
         int current = 0;
         for (int h = 0; h < Height; h++) {
             if (grid[column, h] != null) {
@@ -173,7 +205,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static int[] ColumnFullUntilHeight() {
+    public int[] ColumnFullUntilHeight() {
         int[] columnsHeight = new int[Width];
         for (int i = 0; i < Width; i++) {
             columnsHeight[i] = 0;
@@ -189,18 +221,18 @@ public class Grid : MonoBehaviour {
         return columnsHeight;
     }
 
-    public static Vector2 RoundVector2(Vector2 v) {
+    public Vector2 RoundVector2(Vector2 v) {
         return new Vector2(Mathf.Round(v.x - 0.5f),
                            Mathf.Round(v.y - 0.5f));
     }
 
-    public static bool InsideBorder(Vector2 pos) {
+    public bool InsideBorder(Vector2 pos) {
         return ((int)pos.x >= 0 &&
                 (int)pos.x < Width &&
                 (int)pos.y >= 0);
     }
 
-    public static bool ValidCoordinate(int x, int y) {
+    public bool ValidCoordinate(int x, int y) {
         if (x < 0 || x >= Width || y < 0 || y >= Height || grid[x, y] == null) {
             return false;
         }

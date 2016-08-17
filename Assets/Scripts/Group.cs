@@ -30,10 +30,10 @@ public class Group : MonoBehaviour {
     private bool GroupIsValidGridPosition(Vector3 GroupVector) {
         Vector2[] children = { new Vector2(GroupVector.x + 0.5f, GroupVector.y + 0.5f), new Vector2(GroupVector.x + 0.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 0.5f) };
         foreach (Vector2 child in children) {
-            Vector2 v = Grid.RoundVector2(child);
+            Vector2 v = Grid.Instance.RoundVector2(child);
 
             // Not inside Border?
-            if (!Grid.InsideBorder(v))
+            if (!Grid.Instance.InsideBorder(v))
                 return false;
 
             // Block in grid cell (and not part of same group)?
@@ -69,10 +69,10 @@ public class Group : MonoBehaviour {
             Grid.CurrentGroup = null;
             FindObjectOfType<Spawner>().spawnNext();
 
-            int[] columnsHeight = Grid.ColumnFullUntilHeight();
+            int[] columnsHeight = Grid.Instance.ColumnFullUntilHeight();
             foreach (Transform child in transform) {
                 Vector3 v = child.localPosition;
-                Vector2 gridV = Grid.RoundVector2(child.position);
+                Vector2 gridV = Grid.Instance.RoundVector2(child.position);
                 int downwardsGridY;
                 if (v.y == 0.5) {
                     downwardsGridY = columnsHeight[(int)gridV.x];
@@ -93,13 +93,13 @@ public class Group : MonoBehaviour {
                 child.gameObject.GetComponent<Block>().GoDown = true;
             }
 
-            Grid.JudgeClearAtColumn((int)transform.position.x - 1);
-            Grid.JudgeClearAtColumn((int)transform.position.x);
-            Grid.JudgeClearAtColumn((int)transform.position.x + 1);
-            Grid.JudgeClearAtColumn((int)transform.position.x + 2);
+            Grid.Instance.JudgeClearAtColumn((int)transform.position.x - 1);
+            Grid.Instance.JudgeClearAtColumn((int)transform.position.x);
+            Grid.Instance.JudgeClearAtColumn((int)transform.position.x + 1);
+            Grid.Instance.JudgeClearAtColumn((int)transform.position.x + 2);
         }
         if (blocksCoordinate.Count != 0) {
-            if (Grid.BlocksInsideClearance(blocksCoordinate)) {
+            if (Grid.Instance.BlocksInsideClearance(blocksCoordinate)) {
                 SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
             }
         }

@@ -13,8 +13,8 @@ public class Line : MonoBehaviour {
         // x is from 0 to 15
         int x = (int)transform.position.x;
         if ((int)transform.position.x != (int)previousPosition.x) {
-            Grid.JudgeInsideClearanceAtColumn(x);
-            Grid.ClearBeforeColumn(x);
+            Grid.Instance.JudgeInsideClearanceAtColumn(x);
+            Grid.Instance.ClearBeforeColumn(x);
         }
     }
 }
