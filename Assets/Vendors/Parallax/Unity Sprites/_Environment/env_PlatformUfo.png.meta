@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: f8540bea7b77f4952adc2b7974912096
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: env_PlatformUfo
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -44,11 +45,14 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 40
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: env_PlatformUfo
+    - serializedVersion: 2
+      name: env_PlatformUfo
       rect:
         serializedVersion: 2
         x: 320
@@ -59,6 +63,7 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
+      tessellationDetail: -1
     outline: []
   spritePackingTag: 
   userData: 

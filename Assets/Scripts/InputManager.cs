@@ -166,7 +166,7 @@ public class InputManager : MonoBehaviour {
             }
         }
         // move only applies to moveFinger
-        else if (touchFingerId == _moveFingerId && _moveFingerReady) {
+        else if (touchPhase != TouchPhase.Ended && touchFingerId == _moveFingerId && _moveFingerReady) {
             if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
                 Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
             }
