@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
-    private static GameManager _instance = null;
+public class BackgroundManager : MonoBehaviour {
+    private static BackgroundManager _instance = null;
 
-    public static GameManager Instance {
+    public static BackgroundManager Instance {
         get {
             if (_instance == null) {
-                _instance = GameObject.FindObjectOfType<GameManager>();
+                _instance = GameObject.FindObjectOfType<BackgroundManager>();
 
                 //Tell unity not to destroy this object when loading a new scene!
                 DontDestroyOnLoad(_instance.gameObject);
@@ -34,28 +33,11 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public static float GameTime;
-
     // Use this for initialization
     private void Start() {
     }
 
-    public void Voyage() {
-        ThemeManager.Instance.RandomTheme();
-        SceneManager.LoadScene("game");
-    }
-
-    public void GameOver() {
-        Debug.Log("gameover");
-        ThemeManager.Instance.CurrentThemeName = "Menu";
-        NextQueue.Instance.GameOver();
-        InputManager.Instance.GameOver();
-        Grid.GameOver();
-        SceneManager.LoadScene("start");
-    }
-
     // Update is called once per frame
     private void Update() {
-        GameTime = Time.time;
     }
 }

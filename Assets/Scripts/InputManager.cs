@@ -28,6 +28,14 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    public void GameOver() {
+        _moveFingerId = -1;
+        _downFingerId = -1;
+        _moveFingerReady = true;
+        _downFingerReady = true;
+        _preGroup = null;
+    }
+
     private void Awake() {
         //Check if instance already exists
         if (_instance == null)

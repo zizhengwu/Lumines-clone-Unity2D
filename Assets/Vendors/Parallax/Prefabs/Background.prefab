@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010597751418}
   - 212: {fileID: 212000010689400318}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (18)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013790007340}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Parallax
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,7 +51,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012957225656}
   - 212: {fileID: 212000013892560422}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010633120926}
   - 212: {fileID: 212000011440863054}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ GameObject:
   - 4: {fileID: 4000011825272182}
   - 33: {fileID: 33000010610182514}
   - 23: {fileID: 23000010684509232}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000014075226706}
   - 212: {fileID: 212000013960378076}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010334600018}
   - 212: {fileID: 212000011848952284}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010582066694}
   - 212: {fileID: 212000012812304646}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012011491092}
   - 212: {fileID: 212000011469905782}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012868316964}
   - 212: {fileID: 212000010706710768}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_BigBen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011944537808}
   - 212: {fileID: 212000010332735286}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011769392132}
   - 212: {fileID: 212000013714871672}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000014141934678}
   - 212: {fileID: 212000013716487598}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (17)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012763993452}
   - 20: {fileID: 20000011767824152}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Far Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   - 4: {fileID: 4000014132490132}
   - 198: {fileID: 198000012931458108}
   - 199: {fileID: 199000011739097828}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010532467616}
   - 212: {fileID: 212000011436700526}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011492267800}
   - 212: {fileID: 212000011638237290}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_bg (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010560237830}
   - 212: {fileID: 212000010431994144}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +309,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012848118792}
   - 212: {fileID: 212000012666348802}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_BigBen (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012783709152}
   - 212: {fileID: 212000013558148128}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_TowerFull
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013086258622}
   - 212: {fileID: 212000011374071448}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Gherkin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013007663512}
   - 212: {fileID: 212000012474616208}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012836430344}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Main Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011612769052}
   - 20: {fileID: 20000011827429182}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Near Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,7 +404,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010772171456}
   - 212: {fileID: 212000012801830450}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011858235842}
   - 212: {fileID: 212000010316782336}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011659324078}
   - 212: {fileID: 212000012867187652}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010885507552}
   - 212: {fileID: 212000012886517876}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (16)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013877683684}
   - 212: {fileID: 212000011345216224}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -484,7 +484,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012445601126}
   - 95: {fileID: 95000012749460288}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -500,7 +500,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013901914914}
   - 212: {fileID: 212000010748819864}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: env_Bank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012737498314}
   - 212: {fileID: 212000010361188124}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Gherkin (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -534,9 +534,8 @@ GameObject:
   - 20: {fileID: 20000010796814326}
   - 92: {fileID: 92000013937371814}
   - 124: {fileID: 124000012132767688}
-  - 81: {fileID: 81000010565068444}
   - 114: {fileID: 114000012804881416}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -552,7 +551,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012689528994}
   - 212: {fileID: 212000011050241192}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_Bank (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -568,7 +567,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011600296666}
   - 212: {fileID: 212000012920581994}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: env_BigBen (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,7 +583,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010822830130}
   - 212: {fileID: 212000011684010712}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: env_PlatformUfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1118,7 +1117,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967039
+    m_Bits: 0
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1152,7 +1151,7 @@ Camera:
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 512
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1186,7 +1185,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 512
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1232,13 +1231,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010625660926}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!81 &81000010565068444
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013965207062}
-  m_Enabled: 1
 --- !u!92 &92000013937371814
 Behaviour:
   m_ObjectHideFlags: 1

@@ -1,27 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [ExecuteInEditMode]
 public class CameraParallax : MonoBehaviour {
-
     public Camera mainCamera;
     public Camera farCamera;
     public Camera nearCamera;
 
-    void OnEnable()
-    {
+    private void OnEnable() {
         InitCameras();
     }
 
-    void LateUpdate()
-    {
+    private void LateUpdate() {
         UpdateCameras();
     }
 
-    public void InitCameras()
-    {
-        if(farCamera != null)
-        {
+    public void InitCameras() {
+        if (farCamera != null) {
             farCamera.transform.localPosition = Vector3.zero;
             farCamera.transform.rotation = Quaternion.identity;
             farCamera.transform.localScale = Vector3.one;
@@ -31,15 +25,13 @@ public class CameraParallax : MonoBehaviour {
             farCamera.transparencySortMode = TransparencySortMode.Orthographic;
         }
 
-        if(mainCamera != null)
-        {
+        if (mainCamera != null) {
             mainCamera.orthographic = true;
             mainCamera.clearFlags = CameraClearFlags.Nothing;
             mainCamera.depth = -1;
         }
 
-        if(nearCamera != null)
-        {
+        if (nearCamera != null) {
             nearCamera.transform.localPosition = Vector3.zero;
             nearCamera.transform.rotation = Quaternion.identity;
             nearCamera.transform.localScale = Vector3.one;
@@ -50,9 +42,8 @@ public class CameraParallax : MonoBehaviour {
         }
     }
 
-    public void UpdateCameras()
-    {
-        if(mainCamera == null || farCamera == null || nearCamera == null) return;
+    public void UpdateCameras() {
+        if (mainCamera == null || farCamera == null || nearCamera == null) return;
 
         // orthoSize
         float a = mainCamera.orthographicSize;
@@ -66,8 +57,7 @@ public class CameraParallax : MonoBehaviour {
         nearCamera.nearClipPlane = mainCamera.nearClipPlane;
 
         //update field fo view for parallax cameras
-        float fieldOfView = Mathf.Atan(a / b)  * Mathf.Rad2Deg * 2f;
+        float fieldOfView = Mathf.Atan(a / b) * Mathf.Rad2Deg * 2f;
         nearCamera.fieldOfView = farCamera.fieldOfView = fieldOfView;
     }
-
 }
