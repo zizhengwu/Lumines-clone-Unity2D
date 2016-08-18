@@ -107,9 +107,8 @@ public class Grid : MonoBehaviour {
 
                 foreach (int potentialColumn in potentialColumns) {
                     if (grid[potentialColumn, h] && grid[potentialColumn, h + 1] &&
-                        grid[potentialColumn, h].gameObject.GetComponent<Block>()
-                            .IsSameType(grid[column, h].gameObject.GetComponent<Block>()) && grid[potentialColumn, h + 1].gameObject.GetComponent<Block>()
-                            .IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
+                        grid[potentialColumn, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
+                        grid[potentialColumn, h + 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
                         toOrNotToBeErased[h] = true;
                         toOrNotToBeErased[h + 1] = true;
                         break;
@@ -122,15 +121,38 @@ public class Grid : MonoBehaviour {
     }
 
     private void UpdateClearAtColumn(int column, bool[] toOrNotToBeErased) {
-        for (int i = 0; i < Height; i++) {
-            if (grid[column, i] == null) {
+        CreateClearAtColumn(column, toOrNotToBeErased);
+        for (int h = 0; h < Height; h++) {
+            if (grid[column, h] == null) {
                 continue;
             }
-            if (toOrNotToBeErased[i]) {
-                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.ToBeErased;
+            if (toOrNotToBeErased[h]) {
+                grid[column, h].gameObject.GetComponent<Block>().Status = Block.State.ToBeErased;
             }
             else {
-                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.Normal;
+                grid[column, h].gameObject.GetComponent<Block>().Status = Block.State.Normal;
+            }
+        }
+    }
+
+    private void CreateClearAtColumn(int column, bool[] toOrNotToBeErased) {
+        int left = column - 1;
+        int right = column + 1;
+        for (int h = 0; h < Height; h++) {
+            if (grid[column, h] != null && toOrNotToBeErased[h]) {
+                if (h - 1 >= 0 && toOrNotToBeErased[h - 1] && grid[column, h].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+                    // should be a clearance animation, left or right to be determined
+                    if (left >= 0 && grid[left, h] && grid[left, h - 1] &&
+                        grid[left, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
+                        grid[left, h - 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
+                        Instantiate(Erased, new Vector3(column, h, -1), Quaternion.identity);
+                    }
+                    if (right < Width && grid[right, h] && grid[right, h - 1] &&
+                        grid[right, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
+                        grid[right, h - 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
+                        Instantiate(Erased, new Vector3(column + 1, h, -1), Quaternion.identity);
+                    }
+                }
             }
         }
     }
