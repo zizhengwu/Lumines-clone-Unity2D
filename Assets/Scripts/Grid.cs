@@ -9,6 +9,7 @@ public class Grid : MonoBehaviour {
 
     public static int Height = 12;
     public GameObject InsideClearanceAnimationBlock;
+    public GameObject Erased;
     public static Transform[,] grid = new Transform[Width, Height];
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
@@ -117,6 +118,10 @@ public class Grid : MonoBehaviour {
             }
         }
 
+        UpdateClearAtColumn(column, toOrNotToBeErased);
+    }
+
+    private void UpdateClearAtColumn(int column, bool[] toOrNotToBeErased) {
         for (int i = 0; i < Height; i++) {
             if (grid[column, i] == null) {
                 continue;
