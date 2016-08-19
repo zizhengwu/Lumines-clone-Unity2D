@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour {
     public static int Height = 12;
     public GameObject InsideClearanceAnimationBlock;
     public GameObject Erased;
+    public GameObject Clear;
     public static Transform[,] grid = new Transform[Width, Height];
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
@@ -207,6 +208,11 @@ public class Grid : MonoBehaviour {
             }
             foreach (int i in columnsToFallDown) {
                 FallDownAtColumn(i);
+            }
+            foreach (IntVector2 coord in coordinatesToBeCleared) {
+                if (coordinatesToBeCleared.Contains(new IntVector2(coord.x, coord.y - 1))) {
+                    Instantiate(Clear, new Vector3(coord.x, coord.y, -1), Quaternion.identity);
+                }
             }
             JudgeAllColumns();
             coordinatesToBeCleared = new List<IntVector2>();

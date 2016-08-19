@@ -385,6 +385,7 @@ MonoBehaviour:
   InsideClearanceAnimationBlock: {fileID: 1000014123053318, guid: da96e7fc2a2e99542b8cbb6e6749aa04,
     type: 2}
   Erased: {fileID: 1000012256535810, guid: 82ab103ffa22cc444a1ea90f2b902d19, type: 2}
+  Clear: {fileID: 1000013935027740, guid: e8422a4d840726a44ab6951ed153e435, type: 2}
 --- !u!4 &1161392850
 Transform:
   m_ObjectHideFlags: 0
