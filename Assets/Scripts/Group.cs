@@ -65,6 +65,7 @@ public class Group : MonoBehaviour {
             transform.position += new Vector3(0, -1, 0);
         }
         else {
+            List<IntVector2> blocksCoordinate = new List<IntVector2>();
             SoundManager.Instance.PlaySound(SoundManager.Sound.Hit);
             Grid.CurrentGroup = null;
             FindObjectOfType<Spawner>().spawnNext();
@@ -89,15 +90,20 @@ public class Group : MonoBehaviour {
                 }
                 child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
                 Grid.grid[(int)gridV.x, downwardsGridY] = child;
+                blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
                 child.gameObject.GetComponent<Block>().GoDown = true;
             }
-
             var columns = new List<int>();
             columns.Add((int)transform.position.x - 1);
             columns.Add((int)transform.position.x);
             columns.Add((int)transform.position.x + 1);
             columns.Add((int)transform.position.x + 2);
             Grid.Instance.JudgeClearAtColumns(columns);
+            if (blocksCoordinate.Count != 0) {
+                if (Grid.Instance.BlocksInsideClearance(blocksCoordinate)) {
+                    SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
+                }
+            }
         }
     }
 
