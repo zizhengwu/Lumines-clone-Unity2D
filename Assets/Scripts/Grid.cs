@@ -12,6 +12,7 @@ public class Grid : MonoBehaviour {
     public GameObject Erased;
     public GameObject Clear;
     public static Transform[,] grid = new Transform[Width, Height];
+    private static bool[,] _visited;
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
@@ -82,6 +83,13 @@ public class Grid : MonoBehaviour {
                 grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.InsideCurrentStreak;
                 ShouldClear[column, i] = true;
             }
+        }
+    }
+
+    public void JudgeClearAtColumns(List<int> columns) {
+        _visited = new bool[Width,Height];
+        foreach (var column in columns) {
+            JudgeClearAtColumn(column);
         }
     }
 
@@ -159,9 +167,11 @@ public class Grid : MonoBehaviour {
     }
 
     public void JudgeAllColumns() {
+        var columns = new List<int>();
         for (int i = 0; i < Width; i++) {
-            JudgeClearAtColumn(i);
+            columns.Add(i);
         }
+        JudgeClearAtColumns(columns);
     }
 
     public void ClearAll() {

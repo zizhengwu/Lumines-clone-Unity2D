@@ -92,10 +92,12 @@ public class Group : MonoBehaviour {
                 child.gameObject.GetComponent<Block>().GoDown = true;
             }
 
-            Grid.Instance.JudgeClearAtColumn((int)transform.position.x - 1);
-            Grid.Instance.JudgeClearAtColumn((int)transform.position.x);
-            Grid.Instance.JudgeClearAtColumn((int)transform.position.x + 1);
-            Grid.Instance.JudgeClearAtColumn((int)transform.position.x + 2);
+            var columns = new List<int>();
+            columns.Add((int)transform.position.x - 1);
+            columns.Add((int)transform.position.x);
+            columns.Add((int)transform.position.x + 1);
+            columns.Add((int)transform.position.x + 2);
+            Grid.Instance.JudgeClearAtColumns(columns);
         }
     }
 
