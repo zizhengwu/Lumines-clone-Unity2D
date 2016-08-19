@@ -67,7 +67,6 @@ public class SoundManager : MonoBehaviour {
         }
         if (!theme) {
             theme = gameObject.AddComponent<AudioSource>();
-            theme.volume = 0.4f;
         }
         if (!clockwise) {
             clockwise = gameObject.AddComponent<AudioSource>();
