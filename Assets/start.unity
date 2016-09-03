@@ -101,6 +101,7 @@ GameObject:
   - 223: {fileID: 147099403}
   - 114: {fileID: 147099402}
   - 114: {fileID: 147099401}
+  - 222: {fileID: 147099405}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -184,6 +185,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!222 &147099405
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 147099400}
 --- !u!1 &838131827
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +259,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press any key to start.
+  m_Text: Touch anywhere to start.
 --- !u!222 &838131830
 CanvasRenderer:
   m_ObjectHideFlags: 0
