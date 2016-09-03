@@ -87,7 +87,6 @@ public class Grid : MonoBehaviour {
     }
 
     public void JudgeClearAtColumns(List<int> columns) {
-        _visited = new bool[Width,Height];
         foreach (var column in columns) {
             JudgeClearAtColumn(column);
         }
@@ -211,23 +210,80 @@ public class Grid : MonoBehaviour {
             }
         }
         if (!exist || column == 0) {
-            HashSet<int> columnsToFallDown = new HashSet<int>();
-            foreach (IntVector2 coordinate in coordinatesToBeCleared) {
-                destroyBlockAtGrid(coordinate.x, coordinate.y);
-                columnsToFallDown.Add(coordinate.x);
-            }
-            foreach (int i in columnsToFallDown) {
-                FallDownAtColumn(i);
-            }
-            foreach (IntVector2 coord in coordinatesToBeCleared) {
-                if (coordinatesToBeCleared.Contains(new IntVector2(coord.x, coord.y - 1))) {
-                    Instantiate(Clear, new Vector3(coord.x, coord.y, -1), Quaternion.identity);
-                }
-            }
-            JudgeAllColumns();
-            coordinatesToBeCleared = new List<IntVector2>();
+            var non = PrepareNonClearable();
+            DoClear();
+            AfterClear(non);
         }
         coordinatesToBeCleared.AddRange(currentColumn);
+    }
+
+    private List<Transform> PrepareNonClearable() {
+        var non = new List<Transform>();
+        for (int i = 0; i < Width; i++) {
+            for (int j = 0; j < Height; j++) {
+                if (grid[i, j] != null && grid[i, j].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+                    non.Add(grid[i, j]);
+                }
+            }
+        }
+        return non;
+    }
+
+    private void AfterClear(List<Transform> non) {
+        List<IntVector2> directions = new List<IntVector2> { new IntVector2(-1, 0), new IntVector2(1, 0), new IntVector2(0, -1), new IntVector2(0, 1) };
+        List<IntVector2> visited = new List<IntVector2>();
+
+        while (non.Count > 0) {
+            var item = non.PopAt(0);
+            var p = FindBlockPositionInGrid(item);
+            if (grid[p.x, p.y].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+                continue;
+            }
+            SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
+            Stack<IntVector2> s = new Stack<IntVector2>();
+            s.Push(p);
+            while (s.Count > 0) {
+                var i = s.Pop();
+                visited.Add(i);
+                non.Remove(grid[i.x, i.y]);
+                foreach (var direction in directions) {
+                    var neighbor = new IntVector2(i.x + direction.x, i.y + direction.y);
+                    if (!visited.Contains(neighbor) && ValidCoordinate(neighbor) && grid[neighbor.x, neighbor.y].gameObject.GetComponent<Block>().Status != Block.State.Normal) {
+                        s.Push(neighbor);
+                    }
+                }
+            }
+        }
+    }
+
+    public IntVector2 FindBlockPositionInGrid(Transform t) {
+        for (int i = 0; i < Width; i++) {
+            for (int j = 0; j < Height; j++) {
+                if (grid[i, j] != null && grid[i, j] == t) {
+                    return new IntVector2(i, j);
+                }
+            }
+        }
+
+        return new IntVector2(-1, -1);
+    }
+
+    private void DoClear() {
+        HashSet<int> columnsToFallDown = new HashSet<int>();
+        foreach (IntVector2 coordinate in coordinatesToBeCleared) {
+            destroyBlockAtGrid(coordinate.x, coordinate.y);
+            columnsToFallDown.Add(coordinate.x);
+        }
+        foreach (int i in columnsToFallDown) {
+            FallDownAtColumn(i);
+        }
+        foreach (IntVector2 coord in coordinatesToBeCleared) {
+            if (coordinatesToBeCleared.Contains(new IntVector2(coord.x, coord.y - 1))) {
+                Instantiate(Clear, new Vector3(coord.x, coord.y, -1), Quaternion.identity);
+            }
+        }
+        JudgeAllColumns();
+        coordinatesToBeCleared = new List<IntVector2>();
     }
 
     private void FallDownAtColumn(int column) {
@@ -281,5 +337,9 @@ public class Grid : MonoBehaviour {
             return false;
         }
         return true;
+    }
+
+    public bool ValidCoordinate(IntVector2 i) {
+        return ValidCoordinate(i.x, i.y);
     }
 }
