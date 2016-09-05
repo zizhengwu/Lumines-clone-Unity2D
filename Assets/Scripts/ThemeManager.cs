@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class ThemeManager : MonoBehaviour {
-    public Theme[] Themes;
+    public List<Theme> Themes;
     public Theme CurrentTheme;
+    public String[] ThemeNames;
     private string _currentThemeName;
 
     public event EventHandler ThemeChanged;
@@ -50,11 +52,18 @@ public class ThemeManager : MonoBehaviour {
     }
 
     public void RandomTheme() {
-        CurrentTheme = Themes[Random.Range(0, Themes.Length)];
+        CurrentTheme = Themes[Random.Range(0, Themes.Count)];
         CurrentThemeName = CurrentTheme.ThemeName;
     }
 
     // Update is called once per frame
     private void Update() {
+    }
+
+    private void Start() {
+        Themes = new List<Theme>();
+        foreach (String themeName in ThemeNames) {
+            Themes.Add(new Theme(themeName));
+        }
     }
 }

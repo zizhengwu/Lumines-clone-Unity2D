@@ -94,13 +94,13 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleIdentifier: com.zizhengwu.lumines
-  bundleVersion: 1.1.4
+  bundleVersion: 1.1.6
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
   xboxOneDisableKinectGpuReservation: 0
   singlePassStereoRendering: 0
   protectGraphicsMemory: 0
-  AndroidBundleVersionCode: 6
+  AndroidBundleVersionCode: 8
   AndroidMinSdkVersion: 19
   AndroidPreferredInstallLocation: 1
   aotOptions: 
