@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Theme {
     public Sprite Block0;
@@ -9,7 +8,7 @@ public class Theme {
     public Sprite InsideClearance;
     public string ThemeName;
 
-    public Theme(String name) {
+    public Theme(string name) {
         ThemeName = name;
         string pathPrefix = "Themes/" + ThemeName + "/Sprites/";
         Block0 = Resources.Load<Sprite>(pathPrefix + "block-0");

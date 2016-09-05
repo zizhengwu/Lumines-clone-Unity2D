@@ -66,4 +66,12 @@ public class NextQueue : MonoBehaviour {
         _groups.Add(generateNewGroup.transform);
         return nextGroup;
     }
+
+    public void ChangeSpriteOnThemeChange() {
+        foreach (Transform group in _groups) {
+            foreach (Transform block in group) {
+                block.GetComponent<Block>().SpriteThemeChange();
+            }
+        }
+    }
 }

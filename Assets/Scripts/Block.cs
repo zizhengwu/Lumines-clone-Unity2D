@@ -61,12 +61,10 @@ public class Block : MonoBehaviour {
             switch (Type) {
                 case 0:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
-                    gameObject.GetComponent<Block>().Type = 0;
                     break;
 
                 case 1:
                     gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
-                    gameObject.GetComponent<Block>().Type = 1;
                     break;
             }
         }
@@ -74,6 +72,12 @@ public class Block : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
+    }
+
+    public void SpriteThemeChange() {
+        if (Status != State.InsideCurrentStreak) {
+            ChangeSprite(Status);
+        }
     }
 
     // Update is called once per frame

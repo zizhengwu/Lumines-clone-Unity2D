@@ -4,6 +4,14 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
     private static GameManager _instance = null;
 
+    public enum GameModes {
+        Menu,
+        Voyage
+    }
+
+    public GameModes Mode = GameModes.Menu;
+    public float LastThemeSelected;
+
     public static GameManager Instance {
         get {
             if (_instance == null) {
@@ -41,12 +49,15 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Voyage() {
+        Mode = GameModes.Voyage;
+        LastThemeSelected = GameTime;
         ThemeManager.Instance.RandomTheme();
         SceneManager.LoadScene("game");
     }
 
     public void GameOver() {
         Debug.Log("gameover");
+        Mode = GameModes.Menu;
         ThemeManager.Instance.CurrentThemeName = "Menu";
         NextQueue.Instance.GameOver();
         InputManager.Instance.GameOver();
@@ -57,5 +68,15 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     private void Update() {
         GameTime = Time.time;
+        if (Mode == GameModes.Voyage && GameTime - LastThemeSelected >= 5) {
+            LastThemeSelected = GameTime;
+            ThemeManager.Instance.RandomTheme();
+            ChangeThemeDuringVoyage();
+        }
+    }
+
+    public void ChangeThemeDuringVoyage() {
+        GameObject themeLine = GameObject.Find("theme-line");
+        themeLine.GetComponent<ThemeLine>().BeginThemeChange();
     }
 }

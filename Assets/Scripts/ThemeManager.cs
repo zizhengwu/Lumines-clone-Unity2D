@@ -60,6 +60,12 @@ public class ThemeManager : MonoBehaviour {
     private void Update() {
     }
 
+    public void ChangeTheme() {
+        ThemeManager.Instance.RandomTheme();
+        GameObject themeLine = GameObject.Find("theme-line");
+        themeLine.GetComponent<ThemeLine>().BeginThemeChange();
+    }
+
     private void Start() {
         Themes = new List<Theme>();
         foreach (String themeName in ThemeNames) {

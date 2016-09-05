@@ -12,7 +12,6 @@ public class Grid : MonoBehaviour {
     public GameObject Erased;
     public GameObject Clear;
     public static Transform[,] grid = new Transform[Width, Height];
-    private static bool[,] _visited;
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
@@ -140,6 +139,15 @@ public class Grid : MonoBehaviour {
             else {
                 grid[column, h].gameObject.GetComponent<Block>().Status = Block.State.Normal;
             }
+        }
+    }
+
+    public void ChangeSpriteOnThemeChangeAtColumn(int column) {
+        for (int h = 0; h < Height; h++) {
+            if (grid[column, h] == null) {
+                continue;
+            }
+            grid[column, h].gameObject.GetComponent<Block>().SpriteThemeChange();
         }
     }
 
