@@ -450,6 +450,8 @@ MonoBehaviour:
   ThemeNames:
   - Star
   - Coin
+  - Bubble
+  - Rock
 --- !u!124 &2038262847
 Behaviour:
   m_ObjectHideFlags: 0
