@@ -8,6 +8,7 @@ public class Grid : MonoBehaviour {
     public static int Width = 16;
 
     public static int Height = 12;
+
     public GameObject InsideClearanceAnimationBlock;
     public GameObject Erased;
     public GameObject Clear;

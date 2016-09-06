@@ -8,6 +8,7 @@ public class ThemeLine : MonoBehaviour {
     // Use this for initialization
     private void Start() {
         _ongoing = false;
+        GetComponent<Renderer>().enabled = false;
     }
 
     private void Update() {
@@ -15,9 +16,10 @@ public class ThemeLine : MonoBehaviour {
             Vector3 previousPosition = transform.position;
             transform.position = new Vector3(-5 + (22 - -5) * ((GameManager.GameTime - _startTime) % 3) / 3, previousPosition.y, previousPosition.z);
             // x is from -5 to 21
-            for (int x = (int)transform.position.x; x > (int)previousPosition.x; x--) { 
-                if (x == 21) {
+            for (int x = (int)transform.position.x; x > (int)previousPosition.x; x--) {
+                if (x >= 21) {
                     _ongoing = false;
+                    GetComponent<Renderer>().enabled = false;
                     transform.position = new Vector3(-5, previousPosition.y, previousPosition.z);
                 }
                 if (0 <= x && x <= 15) {
@@ -39,6 +41,7 @@ public class ThemeLine : MonoBehaviour {
     public void BeginThemeChange() {
         _startTime = GameManager.GameTime;
         _ongoing = true;
+        GetComponent<Renderer>().enabled = true;
         _currentGroupChanged = false;
     }
 }
