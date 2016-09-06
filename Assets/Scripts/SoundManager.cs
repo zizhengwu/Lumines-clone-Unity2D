@@ -79,10 +79,6 @@ public class SoundManager : MonoBehaviour {
         }
         clear = new List<AudioSource>();
 
-        for (int i = 1; i <= 5; i++) {
-            clear.Add(gameObject.AddComponent<AudioSource>());
-        }
-
         string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
 
         left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
@@ -92,7 +88,11 @@ public class SoundManager : MonoBehaviour {
         anticlockwise.clip = Resources.Load(themePathPrefix + "anticlockwise") as AudioClip;
         hit.clip = Resources.Load(themePathPrefix + "hit") as AudioClip;
         for (int i = 1; i <= 5; i++) {
-            clear[i - 1].clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
+            AudioClip clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
+            if (clip != null) {
+                clear.Add(gameObject.AddComponent<AudioSource>());
+                clear[i - 1].clip = clip;
+            }
         }
         GetNewClearIterator();
         PlaySound(Sound.Theme);
