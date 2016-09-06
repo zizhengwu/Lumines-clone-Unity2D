@@ -96,28 +96,33 @@ public class SoundManager : MonoBehaviour {
         }
         GetNewClearIterator();
         PlaySound(Sound.Theme);
+        foreach (AudioSource audioSource in FindObjectsOfType<AudioSource>()) {
+            if (audioSource.clip == null) {
+                Destroy(audioSource);
+            }
+        }
     }
 
     public void PlaySound(Sound sound) {
-        if (sound == Sound.Left) {
+        if (sound == Sound.Left && left != null) {
             left.Play();
         }
-        if (sound == Sound.Right) {
+        if (sound == Sound.Right && right != null) {
             right.Play();
         }
-        if (sound == Sound.Clockwise) {
+        if (sound == Sound.Clockwise && clockwise != null) {
             clockwise.Play();
         }
-        if (sound == Sound.AntiClockwise) {
+        if (sound == Sound.AntiClockwise && anticlockwise != null) {
             anticlockwise.Play();
         }
-        if (sound == Sound.Hit) {
+        if (sound == Sound.Hit && hit != null) {
             hit.Play();
         }
-        if (sound == Sound.Theme) {
+        if (sound == Sound.Theme && theme != null) {
             theme.Play();
         }
-        if (sound == Sound.Clear) {
+        if (sound == Sound.Clear && clear.Count > 0) {
             if (GameManager.GameTime - lastClear >= 2) {
                 GetNewClearIterator();
                 clearIterator.Current.Play();
