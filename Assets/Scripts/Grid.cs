@@ -219,9 +219,11 @@ public class Grid : MonoBehaviour {
             }
         }
         if (!exist || column == 0) {
-            var non = PrepareNonClearable();
-            DoClear();
-            AfterClear(non);
+            if (coordinatesToBeCleared.Count > 0) {
+                var non = PrepareNonClearable();
+                DoClear();
+                AfterClear(non);
+            }
         }
         coordinatesToBeCleared.AddRange(currentColumn);
     }
