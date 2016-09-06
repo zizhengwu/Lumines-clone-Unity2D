@@ -15,8 +15,7 @@ public class ThemeLine : MonoBehaviour {
             Vector3 previousPosition = transform.position;
             transform.position = new Vector3(-5 + (22 - -5) * ((GameManager.GameTime - _startTime) % 3) / 3, previousPosition.y, previousPosition.z);
             // x is from -5 to 21
-            int x = (int)transform.position.x;
-            if ((int)transform.position.x != (int)previousPosition.x) {
+            for (int x = (int)transform.position.x; x > (int)previousPosition.x; x--) { 
                 if (x == 21) {
                     _ongoing = false;
                     transform.position = new Vector3(-5, previousPosition.y, previousPosition.z);
