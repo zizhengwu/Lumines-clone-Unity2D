@@ -52,7 +52,14 @@ public class ThemeManager : MonoBehaviour {
     }
 
     public void RandomTheme() {
-        CurrentTheme = Themes[Random.Range(0, Themes.Count)];
+        string nextThemeName = CurrentThemeName;
+        int nextThemeNumber = -1;
+        while (nextThemeName == CurrentThemeName) {
+            nextThemeNumber = Random.Range(0, Themes.Count);
+            nextThemeName = Themes[nextThemeNumber].ThemeName;
+        }
+        Debug.Log(nextThemeName);
+        CurrentTheme = Themes[nextThemeNumber];
         CurrentThemeName = CurrentTheme.ThemeName;
     }
 

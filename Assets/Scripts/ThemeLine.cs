@@ -41,6 +41,5 @@ public class ThemeLine : MonoBehaviour {
         _startTime = GameManager.GameTime;
         _ongoing = true;
         _currentGroupChanged = false;
-        ThemeManager.Instance.RandomTheme();
     }
 }
