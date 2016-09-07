@@ -36,7 +36,7 @@ public class BackgroundManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
-        GameObject gameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length - 1)], transform.position,
+        GameObject gameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length)], transform.position,
             Quaternion.identity);
         DontDestroyOnLoad(gameObject);
     }

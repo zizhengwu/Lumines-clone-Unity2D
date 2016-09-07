@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BackgroundGameObjects:
+  - {fileID: 1000012305566746, guid: 450c3d65743bea74e89b97b87c419c86, type: 2}
   - {fileID: 1000010193116922, guid: db7b131d7b3ef6b40aaf27a6827766f6, type: 2}
 --- !u!1 &147099400
 GameObject:
