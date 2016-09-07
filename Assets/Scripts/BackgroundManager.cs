@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BackgroundManager : MonoBehaviour {
     private static BackgroundManager _instance = null;
+    private GameObject _currentThemeGameObject;
 
     public GameObject[] BackgroundGameObjects;
+
     public static BackgroundManager Instance {
         get {
             if (_instance == null) {
@@ -36,12 +40,19 @@ public class BackgroundManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
-        GameObject gameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length)], transform.position,
-            Quaternion.identity);
-        DontDestroyOnLoad(gameObject);
+        _currentThemeGameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length)], transform.position,
+             Quaternion.identity);
+        DontDestroyOnLoad(_currentThemeGameObject);
     }
 
     // Update is called once per frame
     private void Update() {
+    }
+
+    public void HandleThemeChanged(object sender, EventArgs args) {
+        Destroy(_currentThemeGameObject);
+        _currentThemeGameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length)], transform.position,
+             Quaternion.identity);
+        DontDestroyOnLoad(_currentThemeGameObject);
     }
 }

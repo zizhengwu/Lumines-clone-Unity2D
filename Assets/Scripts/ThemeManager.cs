@@ -41,6 +41,7 @@ public class ThemeManager : MonoBehaviour {
             //If I am the first instance, make me the Singleton
             _instance = this;
             ThemeChanged += SoundManager.Instance.HandleThemeChanged;
+            ThemeChanged += BackgroundManager.Instance.HandleThemeChanged;
             DontDestroyOnLoad(this);
         }
         else {

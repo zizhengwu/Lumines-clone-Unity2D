@@ -1,31 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class BackgroundScroll : MonoBehaviour {
-	public float speed = 0;
-	public BackgroundScroll current;
+    public float speed = 0;
+    public BackgroundScroll current;
     public float tileSize = 0;
-    float pos = 0;
-	Renderer my_renderer;
-	// Use this for initialization
-	void Start () {
-		current = this;
-		
-	}
-	
-	// Update is called once per frame
+    private float pos = 0;
+    private Renderer my_renderer;
 
-	void Update(){
+    // Use this for initialization
+    private void Start() {
+        current = this;
+    }
 
-       
-		pos += speed;
-		if (pos < -tileSize)
-			pos += tileSize;
+    // Update is called once per frame
 
-		current.transform.position = new Vector3 (pos, current.transform.position.y, current.transform.position.z);
-		//my_renderer.material.mainTextureOffset = new Vector2 (pos, 0);
+    private void Update() {
+        pos += speed;
+        if (pos < -tileSize)
+            pos += tileSize;
 
-	}
-
-
+        current.transform.position = new Vector3(pos, current.transform.position.y, current.transform.position.z);
+        //my_renderer.material.mainTextureOffset = new Vector2 (pos, 0);
+    }
 }
