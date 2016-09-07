@@ -131,8 +131,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BackgroundGameObjects:
-  - {fileID: 1000012305566746, guid: 450c3d65743bea74e89b97b87c419c86, type: 2}
   - {fileID: 1000010193116922, guid: db7b131d7b3ef6b40aaf27a6827766f6, type: 2}
+  - {fileID: 1000012251974382, guid: 07889253214810f4a91dfe7f388ee9d9, type: 2}
+  - {fileID: 1000012233076646, guid: 094603991e022e64793f49fcb7f53949, type: 2}
+  - {fileID: 1000011686801304, guid: 9a9e0a1bad7826a47bbab7788073deb7, type: 2}
+  - {fileID: 1000011786275414, guid: 4553481bc4d01d14d9c30522c091fcc4, type: 2}
+  - {fileID: 1000012194929860, guid: 450c3d65743bea74e89b97b87c419c86, type: 2}
+  - {fileID: 1000010343222990, guid: b5022d16ab6c3a244b7d609b0985ac06, type: 2}
+  - {fileID: 1000011033531644, guid: 6a0280dc857342f48b4c7f8d9b2e9f0f, type: 2}
+  - {fileID: 1000014191454616, guid: 263aaabd99598404b9eeed32d42e16a1, type: 2}
+  - {fileID: 1000012775213488, guid: 7a15e78b1c37acb4f8a3e65881d0a6ba, type: 2}
+  - {fileID: 1000012922803172, guid: 48fe969d4daca3b4a88753b2958c248e, type: 2}
 --- !u!1 &147099400
 GameObject:
   m_ObjectHideFlags: 0
