@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
+        Application.targetFrameRate = 60;
     }
 
     public void Voyage() {
