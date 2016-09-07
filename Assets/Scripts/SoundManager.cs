@@ -56,9 +56,8 @@ public class SoundManager : MonoBehaviour {
     }
 
     public void HandleThemeChanged(object sender, EventArgs args) {
-        theme.Stop();
-
-        string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
+        //string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
+        string themePathPrefix = "Themes/" + "Star" + "/Sound/";
 
         left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
         right.clip = Resources.Load(themePathPrefix + "right") as AudioClip;
@@ -71,7 +70,11 @@ public class SoundManager : MonoBehaviour {
             clear[i - 1].clip = clip;
         }
         GetNewClearIterator();
-        PlaySound(Sound.Theme);
+
+        if (!theme.isPlaying) {
+            theme.Stop();
+            PlaySound(Sound.Theme);
+        }
     }
 
     public void PlaySound(Sound sound) {
