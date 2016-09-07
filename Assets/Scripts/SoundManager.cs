@@ -56,28 +56,7 @@ public class SoundManager : MonoBehaviour {
     }
 
     public void HandleThemeChanged(object sender, EventArgs args) {
-        if (theme) {
-            theme.Stop();
-        }
-        if (!left) {
-            left = gameObject.AddComponent<AudioSource>();
-        }
-        if (!right) {
-            right = gameObject.AddComponent<AudioSource>();
-        }
-        if (!theme) {
-            theme = gameObject.AddComponent<AudioSource>();
-        }
-        if (!clockwise) {
-            clockwise = gameObject.AddComponent<AudioSource>();
-        }
-        if (!anticlockwise) {
-            anticlockwise = gameObject.AddComponent<AudioSource>();
-        }
-        if (!hit) {
-            hit = gameObject.AddComponent<AudioSource>();
-        }
-        clear = new List<AudioSource>();
+        theme.Stop();
 
         string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
 
@@ -88,41 +67,33 @@ public class SoundManager : MonoBehaviour {
         anticlockwise.clip = Resources.Load(themePathPrefix + "anticlockwise") as AudioClip;
         hit.clip = Resources.Load(themePathPrefix + "hit") as AudioClip;
         for (int i = 1; i <= 5; i++) {
-            AudioClip clip = Resources.Load(themePathPrefix + i.ToString()) as AudioClip;
-            if (clip != null) {
-                clear.Add(gameObject.AddComponent<AudioSource>());
-                clear[i - 1].clip = clip;
-            }
+            AudioClip clip = Resources.Load(themePathPrefix + i) as AudioClip;
+            clear[i - 1].clip = clip;
         }
         GetNewClearIterator();
         PlaySound(Sound.Theme);
-        foreach (AudioSource audioSource in FindObjectsOfType<AudioSource>()) {
-            if (audioSource.clip == null) {
-                Destroy(audioSource);
-            }
-        }
     }
 
     public void PlaySound(Sound sound) {
-        if (sound == Sound.Left && left != null) {
+        if (sound == Sound.Left) {
             left.Play();
         }
-        if (sound == Sound.Right && right != null) {
+        if (sound == Sound.Right) {
             right.Play();
         }
-        if (sound == Sound.Clockwise && clockwise != null) {
+        if (sound == Sound.Clockwise) {
             clockwise.Play();
         }
-        if (sound == Sound.AntiClockwise && anticlockwise != null) {
+        if (sound == Sound.AntiClockwise) {
             anticlockwise.Play();
         }
-        if (sound == Sound.Hit && hit != null) {
+        if (sound == Sound.Hit) {
             hit.Play();
         }
-        if (sound == Sound.Theme && theme != null) {
+        if (sound == Sound.Theme) {
             theme.Play();
         }
-        if (sound == Sound.Clear && clear.Count > 0) {
+        if (sound == Sound.Clear) {
             if (GameManager.GameTime - lastClear >= 2) {
                 GetNewClearIterator();
                 clearIterator.Current.Play();
@@ -145,6 +116,16 @@ public class SoundManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
+        left = gameObject.AddComponent<AudioSource>();
+        right = gameObject.AddComponent<AudioSource>();
+        theme = gameObject.AddComponent<AudioSource>();
+        clockwise = gameObject.AddComponent<AudioSource>();
+        anticlockwise = gameObject.AddComponent<AudioSource>();
+        hit = gameObject.AddComponent<AudioSource>();
+        clear = new List<AudioSource>();
+        for (int i = 1; i <= 5; i++) {
+            clear.Add(gameObject.AddComponent<AudioSource>());
+        }
     }
 
     // Update is called once per frame
