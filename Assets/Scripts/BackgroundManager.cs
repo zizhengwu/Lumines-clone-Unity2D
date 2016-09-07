@@ -3,6 +3,7 @@
 public class BackgroundManager : MonoBehaviour {
     private static BackgroundManager _instance = null;
 
+    public GameObject[] BackgroundGameObjects;
     public static BackgroundManager Instance {
         get {
             if (_instance == null) {
@@ -35,6 +36,9 @@ public class BackgroundManager : MonoBehaviour {
 
     // Use this for initialization
     private void Start() {
+        GameObject gameObject = (GameObject)Instantiate(BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length - 1)], transform.position,
+            Quaternion.identity);
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
