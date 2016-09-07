@@ -444,6 +444,9 @@ MonoBehaviour:
   - Rock
   - Traffic
   - Crystal
+  - Donut
+  - Gem
+  - Wood
 --- !u!124 &2038262847
 Behaviour:
   m_ObjectHideFlags: 0
