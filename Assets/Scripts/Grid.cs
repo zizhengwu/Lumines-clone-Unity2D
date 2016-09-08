@@ -227,7 +227,7 @@ public class Grid : MonoBehaviour {
             }
         }
         if (column == 0) {
-            GameObject.Find("current-streak-score").GetComponent<LineScore>().ToZero();
+            GameObject.Find("current-streak-score").GetComponent<ScoreManager>().ToZero();
         }
         coordinatesToBeCleared.AddRange(currentColumn);
     }
@@ -367,6 +367,6 @@ public class Grid : MonoBehaviour {
                 count += 1;
             }
         }
-        GameObject.Find("current-streak-score").GetComponent<LineScore>().AddScore(count);
+        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().AddScore(count);
     }
 }

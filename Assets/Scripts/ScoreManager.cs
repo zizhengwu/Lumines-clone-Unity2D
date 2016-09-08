@@ -2,14 +2,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LineScore : MonoBehaviour {
+public class ScoreManager : MonoBehaviour {
     public Text Score;
+    public Text Time;
+    private float _gameStartTime;
+
     // Use this for initialization
     private void Start() {
+        _gameStartTime = GameManager.GameTime;
     }
 
     // Update is called once per frame
     private void Update() {
+        float gameOngoingTime = GameManager.GameTime - _gameStartTime;
+        Time.text = string.Format("{0}:{1:00}", (int)gameOngoingTime / 60, (int)gameOngoingTime % 60);
     }
 
     public void AddScore(int score) {
