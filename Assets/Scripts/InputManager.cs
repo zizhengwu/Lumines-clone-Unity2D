@@ -189,6 +189,6 @@ public class InputManager : MonoBehaviour {
     }
 
     public Vector3 NormalizeCameraPoint(Vector3 position) {
-        return 8f / 5f * position + new Vector3(8, 5, 10);
+        return 8f / 5f * position + new Vector3(8, 7, 10);
     }
 }
