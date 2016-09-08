@@ -1,8 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LineScore : MonoBehaviour {
-
+    public Text Score;
     // Use this for initialization
     private void Start() {
     }
@@ -12,7 +13,8 @@ public class LineScore : MonoBehaviour {
     }
 
     public void AddScore(int score) {
-        GetComponent<TextMesh>().text = (Int32.Parse(GetComponent<TextMesh>().text) + score).ToString();
+        GetComponent<TextMesh>().text = (int.Parse(GetComponent<TextMesh>().text) + score).ToString();
+        Score.text = (int.Parse(GetComponent<TextMesh>().text) + score).ToString();
     }
 
     public void ToZero() {
