@@ -69,11 +69,11 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     private void Update() {
         GameTime = Time.time;
-        if (Mode == GameModes.Voyage && GameTime - LastThemeSelected >= 15) {
-            LastThemeSelected = GameTime;
-            ThemeManager.Instance.RandomTheme();
-            ChangeThemeDuringVoyage();
-        }
+        //if (Mode == GameModes.Voyage && GameTime - LastThemeSelected >= 15) {
+        //    LastThemeSelected = GameTime;
+        //    ThemeManager.Instance.RandomTheme();
+        //    ChangeThemeDuringVoyage();
+        //}
     }
 
     public void ChangeThemeDuringVoyage() {
