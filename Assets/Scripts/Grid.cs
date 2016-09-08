@@ -221,9 +221,13 @@ public class Grid : MonoBehaviour {
         if (!exist || column == 0) {
             if (coordinatesToBeCleared.Count > 0) {
                 var non = PrepareNonClearable();
+                UpdateScore();
                 DoClear();
                 AfterClear(non);
             }
+        }
+        if (column == 0) {
+            GameObject.Find("current-streak-score").GetComponent<LineScore>().ToZero();
         }
         coordinatesToBeCleared.AddRange(currentColumn);
     }
@@ -352,5 +356,17 @@ public class Grid : MonoBehaviour {
 
     public bool ValidCoordinate(IntVector2 i) {
         return ValidCoordinate(i.x, i.y);
+    }
+
+    private void UpdateScore() {
+        int count = 0;
+        foreach (IntVector2 c in coordinatesToBeCleared) {
+            int x = c.x;
+            int y = c.y;
+            if (coordinatesToBeCleared.Contains(new IntVector2(x, y + 1)) && coordinatesToBeCleared.Contains(new IntVector2(x + 1, y)) && coordinatesToBeCleared.Contains(new IntVector2(x + 1, y + 1))) {
+                count += 1;
+            }
+        }
+        GameObject.Find("current-streak-score").GetComponent<LineScore>().AddScore(count);
     }
 }
