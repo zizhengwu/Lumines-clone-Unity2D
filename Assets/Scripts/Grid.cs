@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -367,6 +368,6 @@ public class Grid : MonoBehaviour {
                 count += 1;
             }
         }
-        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().AddScore(count);
+        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().AddScore(Math.Max(count, 1));
     }
 }

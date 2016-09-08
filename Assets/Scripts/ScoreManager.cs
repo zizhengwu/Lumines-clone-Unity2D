@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour {
@@ -20,7 +19,7 @@ public class ScoreManager : MonoBehaviour {
 
     public void AddScore(int score) {
         GetComponent<TextMesh>().text = (int.Parse(GetComponent<TextMesh>().text) + score).ToString();
-        Score.text = (int.Parse(GetComponent<TextMesh>().text) + score).ToString();
+        Score.text = (int.Parse(Score.text) + score).ToString();
     }
 
     public void ToZero() {
