@@ -17,6 +17,10 @@ public class Gameover : MonoBehaviour {
     public void ToggleEndMenu(int score) {
         gameObject.SetActive(true);
         Score.text = score.ToString();
+        int oldHighscore = PlayerPrefs.GetInt("highscore", 0);
+        if (score > oldHighscore) {
+            PlayerPrefs.SetInt("highscore", score);
+        }
     }
 
     public void BackToStartScreen() {
