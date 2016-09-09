@@ -8,7 +8,8 @@ Lumines Clone in Unity2D
        src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
 </a>
 
-<a href="https://itunes.apple.com/us/app/tribute-to-lumines/id1144584844?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg) no-repeat;width:165px;height:40px;"></a>
+<a href="https://itunes.apple.com/us/app/tribute-to-lumines/id1144584844?mt=8">
+<img src="https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png" /></a>
 
 # Screenshot 
 
