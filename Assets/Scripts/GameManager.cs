@@ -57,13 +57,9 @@ public class GameManager : MonoBehaviour {
     }
 
     public void GameOver() {
+        Grid.CurrentGroup = null;
+        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().GameOver();
         Debug.Log("gameover");
-        Mode = GameModes.Menu;
-        ThemeManager.Instance.CurrentThemeName = "Menu";
-        NextQueue.Instance.GameOver();
-        InputManager.Instance.GameOver();
-        Grid.Instance.GameOver();
-        SceneManager.LoadScene("start");
     }
 
     // Update is called once per frame

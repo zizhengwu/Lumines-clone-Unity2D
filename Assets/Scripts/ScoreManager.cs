@@ -3,8 +3,9 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour {
     public Text Score;
-    public Text Time;
+    public Text CurrentGameTime;
     public Text Clear;
+    public Gameover Gameover;
     private float _gameStartTime;
 
     // Use this for initialization
@@ -15,7 +16,7 @@ public class ScoreManager : MonoBehaviour {
     // Update is called once per frame
     private void Update() {
         float gameOngoingTime = GameManager.GameTime - _gameStartTime;
-        Time.text = string.Format("{0}:{1:00}", (int)gameOngoingTime / 60, (int)gameOngoingTime % 60);
+        CurrentGameTime.text = string.Format("{0}:{1:00}", (int)gameOngoingTime / 60, (int)gameOngoingTime % 60);
     }
 
     public void AddScore(int score) {
@@ -36,5 +37,10 @@ public class ScoreManager : MonoBehaviour {
             ThemeManager.Instance.RandomTheme();
             GameManager.Instance.ChangeThemeDuringVoyage();
         }
+    }
+
+    public void GameOver() {
+        Time.timeScale = 0;
+        Gameover.ToggleEndMenu(int.Parse(Score.text));
     }
 }
