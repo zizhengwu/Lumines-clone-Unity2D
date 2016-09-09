@@ -96,6 +96,12 @@ public class SoundManager : MonoBehaviour {
         }
     }
 
+    public void StopTheme() {
+        if (theme) {
+            theme.Stop();
+        }
+    }
+
     public void PlaySound(Sound sound) {
         if (sound == Sound.Left) {
             left.Play();

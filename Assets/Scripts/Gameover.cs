@@ -23,6 +23,7 @@ using UnityEngine.UI;
 
 public class Gameover : MonoBehaviour {
     public Text Score;
+    public GameObject AchiveHighscore;
 
     // Use this for initialization
     private void Start() {
@@ -34,10 +35,13 @@ public class Gameover : MonoBehaviour {
     }
 
     public void ToggleEndMenu(int score) {
+        SoundManager.Instance.StopTheme();
         gameObject.SetActive(true);
-        Score.text = score.ToString();
+        Score.text = string.Format("Score          {0}", score.ToString());
         int oldHighscore = PlayerPrefs.GetInt("highscore", 0);
+        AchiveHighscore.SetActive(false);
         if (score > oldHighscore) {
+            AchiveHighscore.SetActive(true);
             PlayerPrefs.SetInt("highscore", score);
         }
     }
