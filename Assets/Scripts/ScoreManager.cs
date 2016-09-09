@@ -5,12 +5,14 @@ public class ScoreManager : MonoBehaviour {
     public Text Score;
     public Text CurrentGameTime;
     public Text Clear;
+    public Text Highscore;
     public Gameover Gameover;
     private float _gameStartTime;
 
     // Use this for initialization
     private void Start() {
         _gameStartTime = GameManager.GameTime;
+        Highscore.text = PlayerPrefs.GetInt("highscore", 0).ToString();
     }
 
     // Update is called once per frame
@@ -24,6 +26,9 @@ public class ScoreManager : MonoBehaviour {
         int preScore = int.Parse(Score.text);
         int afterScore = preScore + score;
         UpdateProgress(preScore, afterScore);
+        if (afterScore > int.Parse(Highscore.text)) {
+            Highscore.text = afterScore.ToString();
+        }
         Score.text = afterScore.ToString();
     }
 
