@@ -1,0 +1,3 @@
+[submodule "Assets/Resources"]
+	path = Assets/Resources
+	url = git@github.com:zizhengwu/Lumines-clone-Unity2D-Assets.git
