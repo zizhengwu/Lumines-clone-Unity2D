@@ -20,10 +20,19 @@
 using UnityEngine;
 
 public class HomeMenu : MonoBehaviour {
+    public GameObject HowToPlay;
+
+    private void Start() {
+        HowToPlay.SetActive(false);
+    }
 
     private void Update() {
         if (Input.anyKeyDown) {
-            GameManager.Instance.Voyage();
+            HowToPlay.SetActive(true);
         }
+    }
+
+    public void StartGame() {
+        GameManager.Instance.Voyage();
     }
 }
