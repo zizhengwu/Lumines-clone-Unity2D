@@ -76,7 +76,9 @@ public class SoundManager : MonoBehaviour {
 
     public void HandleThemeChanged(object sender, EventArgs args) {
         //string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
-        string themePathPrefix = "Themes/" + "Star" + "/Sound/";
+        var rnd = new System.Random();
+        string themePathPrefix = "Sounds/" + rnd.Next(1,3) + "/";
+        theme.volume = 0.5f;
 
         left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
         right.clip = Resources.Load(themePathPrefix + "right") as AudioClip;
@@ -90,8 +92,7 @@ public class SoundManager : MonoBehaviour {
         }
         GetNewClearIterator();
 
-        if (!theme.isPlaying) {
-            theme.Stop();
+        if (!theme.isPlaying && ThemeManager.Instance.CurrentThemeName != "Menu") {
             PlaySound(Sound.Theme);
         }
     }
