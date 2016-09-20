@@ -57,7 +57,7 @@ public class ScoreManager : MonoBehaviour {
 
     private void UpdateProgress(int preScore, int afterScore) {
         Clear.text = string.Format("{0} %", (afterScore % 50) * 2);
-        if ((preScore / 50) != (afterScore / 50)) {
+        if ((preScore < 10 && afterScore >= 10) || ((preScore / 50) != (afterScore / 50))) {
             ThemeManager.Instance.RandomTheme();
             GameManager.Instance.ChangeThemeDuringVoyage();
         }
