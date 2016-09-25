@@ -433,6 +433,117 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HowToPlay: {fileID: 1535015469}
+--- !u!1 &895739782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 895739791}
+  - 20: {fileID: 895739790}
+  - 114: {fileID: 895739787}
+  - 114: {fileID: 895739786}
+  - 114: {fileID: 895739785}
+  m_Layer: 0
+  m_Name: Singletons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &895739785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 895739782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de29c2a16b35204cb2cf7ad2b6d4d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ThemeNames:
+  - Star
+  - Coin
+  - Bubble
+  - Rock
+  - Traffic
+  - Crystal
+  - Donut
+  - Gem
+  - Wood
+--- !u!114 &895739786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 895739782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51273ef91f225254faad9d0864d9e012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &895739787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 895739782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 966eb06045d6d6c4b8234c76cf2f10ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mode: 0
+  LastThemeSelected: 0
+--- !u!20 &895739790
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 895739782}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 4
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0.019607844}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
+--- !u!4 &895739791
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 895739782}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
 --- !u!1 &1005090433
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,9 +940,6 @@ GameObject:
   - 20: {fileID: 2038262849}
   - 92: {fileID: 2038262848}
   - 124: {fileID: 2038262847}
-  - 114: {fileID: 2038262852}
-  - 114: {fileID: 2038262851}
-  - 114: {fileID: 2038262846}
   - 81: {fileID: 2038262853}
   - 114: {fileID: 2038262854}
   m_Layer: 0
@@ -841,27 +949,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2038262846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2038262845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de29c2a16b35204cb2cf7ad2b6d4d1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ThemeNames:
-  - Star
-  - Coin
-  - Bubble
-  - Rock
-  - Traffic
-  - Crystal
-  - Donut
-  - Gem
-  - Wood
 --- !u!124 &2038262847
 Behaviour:
   m_ObjectHideFlags: 0
@@ -923,30 +1010,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &2038262851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2038262845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51273ef91f225254faad9d0864d9e012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2038262852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2038262845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966eb06045d6d6c4b8234c76cf2f10ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Mode: 0
-  LastThemeSelected: 0
 --- !u!81 &2038262853
 AudioListener:
   m_ObjectHideFlags: 0
