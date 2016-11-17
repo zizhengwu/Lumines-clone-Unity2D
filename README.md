@@ -9,7 +9,7 @@ Lumines Clone in Unity2D
 </a>
 
 <a href="https://itunes.apple.com/us/app/tribute-to-lumines/id1144584844?mt=8">
-<img src="https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png" /></a>
+<img src="https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.png" /></a>
 
 # Screenshot 
 
