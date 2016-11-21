@@ -19,33 +19,71 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Group : MonoBehaviour {
-    private int[] types = { 0, 1 };
-    public int blocksRemaining = 4;
+// Multiple instance object in Network
+public class Group : NetworkBehaviour {
+    public int blockRemaining = 4;
+    private SyncListInt _blockType = new SyncListInt();
+    private SyncListInt _blockStatus = new SyncListInt();
+    private SyncListBool _blockEnabled = new SyncListBool();
 
-    // Use this for initialization
-    private void Start() {
-        foreach (Transform child in transform) {
-            GameObject c = child.gameObject;
-            switch (types[Random.Range(0, 2)]) {
-                case 0:
-                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
-                    c.GetComponent<Block>().Type = 0;
-                    break;
+    [Server]
+    public void init() {
+        // Initial status of each block
+        foreach (Transform child in transform){
+            int type = Random.Range(0, 2);
 
-                case 1:
-                    c.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
-                    c.GetComponent<Block>().Type = 1;
-                    break;
-            }
+            child.GetComponent<Block>().init(type);
+            _blockType.Add(type);
+            _blockStatus.Add((int) Block.State.Normal);
+            _blockEnabled.Add(true);
         }
     }
 
-    public void MakeItCurrentGroup() {
-        Grid.CurrentGroup = transform;
+    [Server]
+    public void destroy(Block blk) {
+        int index = getBlockIndex(blk);
+
+        _blockEnabled[index] = false;
+        if (--blockRemaining == 0) {
+            Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
+        }
     }
 
+    [Server]
+    public void setBlockStatus(Block blk, Block.State status) {
+        int index = getBlockIndex(blk);
+        _blockStatus[index] = (int) status;
+    }
+
+    [Client]
+    public int getBlockType(Block blk) {
+        return _blockType[getBlockIndex(blk)];
+    }
+
+    [Client]
+    public Block.State getBlockStatus(Block blk) {
+        return (Block.State) _blockStatus[getBlockIndex(blk)];
+    }
+
+    [Client]
+    public bool getBlockEnabled(Block blk) {
+        return _blockEnabled[getBlockIndex(blk)];
+    }
+
+    [Client]
+    private int getBlockIndex(Block blk) {
+        for (int i = 0; i < _blockType.Count; i++) {
+            Transform child = transform.GetChild(i).transform;
+            if (child == blk.transform)
+                return i;
+        }
+        throw new System.Exception("cant find Block index: " + blk);
+    }
+    
+    [Server]
     private bool GroupIsValidGridPosition(Vector3 GroupVector) {
         Vector2[] children = { new Vector2(GroupVector.x + 0.5f, GroupVector.y + 0.5f), new Vector2(GroupVector.x + 0.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 1.5f), new Vector2(GroupVector.x + 1.5f, GroupVector.y + 0.5f) };
         foreach (Vector2 child in children) {
@@ -63,69 +101,74 @@ public class Group : MonoBehaviour {
         return true;
     }
 
+    [Server]
     public void MoveLeft() {
-        SoundManager.Instance.PlaySound(SoundManager.Sound.Left);
+        SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Left);
 
         if (GroupIsValidGridPosition(transform.position + new Vector3(-1, 0, 0))) {
             transform.position += new Vector3(-1, 0, 0);
         }
     }
 
+    [Server]
     public void MoveRight() {
-        SoundManager.Instance.PlaySound(SoundManager.Sound.Right);
+        SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Right);
 
         if (GroupIsValidGridPosition(transform.position + new Vector3(1, 0, 0))) {
             transform.position += new Vector3(1, 0, 0);
         }
     }
 
+    [Server]
     public void MoveDown() {
         if (GroupIsValidGridPosition(transform.position + new Vector3(0, -1, 0))) {
             transform.position += new Vector3(0, -1, 0);
         }
         else {
-            List<IntVector2> blocksCoordinate = new List<IntVector2>();
-            SoundManager.Instance.PlaySound(SoundManager.Sound.Hit);
-            Grid.CurrentGroup = null;
-            FindObjectOfType<Spawner>().spawnNext();
+            SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Hit);
+            GameManager.Instance.gameControl(GameManager.Instance.getPlayer(this), GameManager.Command.renewGroup);
+            MovetoButtom();
+        }
+    }
 
-            int[] columnsHeight = Grid.Instance.ColumnFullUntilHeight();
-            foreach (Transform child in transform) {
-                Vector3 v = child.localPosition;
-                Vector2 gridV = Grid.Instance.RoundVector2(child.position);
-                int downwardsGridY;
-                if (v.y == 0.5) {
-                    downwardsGridY = columnsHeight[(int)gridV.x];
-                }
-                else if (v.y == 1.5) {
-                    downwardsGridY = columnsHeight[(int)gridV.x] + 1;
-                }
-                else {
-                    throw new System.Exception();
-                }
-                if (downwardsGridY >= 10) {
-                    GameManager.Instance.GameOver();
-                    return;
-                }
-                child.gameObject.GetComponent<Block>().DownTarget = downwardsGridY;
-                Grid.grid[(int)gridV.x, downwardsGridY] = child;
-                blocksCoordinate.Add(new IntVector2((int)gridV.x, downwardsGridY));
-                child.gameObject.GetComponent<Block>().GoDown = true;
+    [Server]
+    public void MovetoButtom() {
+        List<IntVector2> blocksCoordinate = new List<IntVector2>();
+        int[] columnsHeight = Grid.Instance.ColumnFullUntilHeight();
+        foreach (Transform child in transform) {
+            Vector3 v = child.localPosition;
+            Vector2 gridV = Grid.Instance.RoundVector2(child.position);
+            int downwardsGridY;
+            if (v.y == 0.5) {
+                downwardsGridY = columnsHeight[(int) gridV.x];
             }
-            var columns = new List<int>();
-            columns.Add((int)transform.position.x - 1);
-            columns.Add((int)transform.position.x);
-            columns.Add((int)transform.position.x + 1);
-            columns.Add((int)transform.position.x + 2);
-            Grid.Instance.JudgeClearAtColumns(columns);
-            if (blocksCoordinate.Count != 0) {
-                if (Grid.Instance.BlocksInsideClearance(blocksCoordinate)) {
-                    SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
-                }
+            else if (v.y == 1.5) {
+                downwardsGridY = columnsHeight[(int) gridV.x] + 1;
+            }
+            else {
+                throw new System.Exception();
+            }
+            if (downwardsGridY >= 10) {
+                GameManager.Instance.GameOver();
+                return;
+            }
+            Grid.grid[(int) gridV.x, downwardsGridY] = child;
+            blocksCoordinate.Add(new IntVector2((int) gridV.x, downwardsGridY));
+
+            child.GetComponent<Block>().setDownTarget(downwardsGridY);
+        }
+        Grid.Instance.JudgeClearAtColumn((int) transform.position.x - 1);
+        Grid.Instance.JudgeClearAtColumn((int) transform.position.x    );
+        Grid.Instance.JudgeClearAtColumn((int) transform.position.x + 1);
+        Grid.Instance.JudgeClearAtColumn((int) transform.position.x + 2);
+        if (blocksCoordinate.Count != 0) {
+            if (Grid.Instance.BlocksInsideClearance(blocksCoordinate)) {
+                SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Clear);
             }
         }
     }
 
+    [Server]
     public void ClockwiseRotate() {
         foreach (Transform child in transform) {
             Vector3 v = child.localPosition;
@@ -148,6 +191,7 @@ public class Group : MonoBehaviour {
         }
     }
 
+    [Server]
     public void AnticlockwiseRotate() {
         foreach (Transform child in transform) {
             Vector3 v = child.localPosition;
@@ -168,9 +212,5 @@ public class Group : MonoBehaviour {
                 throw new System.Exception();
             }
         }
-    }
-
-    // Update is called once per frame
-    private void Update() {
     }
 }

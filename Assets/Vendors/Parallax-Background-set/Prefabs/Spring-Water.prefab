@@ -261,6 +261,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012341463574}
+  - 114: {fileID: 114000014068869980}
   m_Layer: 9
   m_Name: Spring-Water
   m_TagString: Untagged
@@ -602,6 +603,38 @@ MonoBehaviour:
   speed: -0.03
   current: {fileID: 0}
   tileSize: 30.55
+--- !u!114 &114000014068869980
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014191454616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 38
+    i1: 58
+    i2: 170
+    i3: 189
+    i4: 153
+    i5: 89
+    i6: 132
+    i7: 4
+    i8: 185
+    i9: 238
+    i10: 237
+    i11: 50
+    i12: 212
+    i13: 46
+    i14: 22
+    i15: 161
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!124 &124000011250184338
 Behaviour:
   m_ObjectHideFlags: 1

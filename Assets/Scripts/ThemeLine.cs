@@ -18,23 +18,51 @@
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ThemeLine : MonoBehaviour {
+public class ThemeLine : NetworkBehaviour {
     private bool _ongoing;
     private float _startTime;
     private bool _currentGroupChanged = false;
 
+    #region Singleton
+    private static ThemeLine _instance;
+    public static ThemeLine Instance {
+        get {
+            if (_instance == null) {
+                _instance = FindObjectOfType<ThemeLine>();
+            }
+            return _instance;
+        }
+    }
+
+    private void Awake() {
+        if (_instance == null) {
+            _instance = this;
+        }
+        else if (_instance != this) {
+            Destroy(gameObject);
+        }
+    }
+    #endregion
+
     // Use this for initialization
     private void Start() {
+        if (!isServer)
+            return;
+
         _ongoing = false;
-        GetComponent<Renderer>().enabled = false;
     }
 
     private void Update() {
+        if (!isServer)
+            return;
+
         if (_ongoing) {
             Vector3 previousPosition = transform.position;
-            transform.position = new Vector3(-5 + (22 - -5) * ((GameManager.GameTime - _startTime) % 3) / 3, previousPosition.y, previousPosition.z);
+            transform.position = new Vector3(-5 + (22 - -5) * ((GameStatusSyncer.Instance.GameTime - _startTime) % 3) / 3, previousPosition.y, previousPosition.z);
             // x is from -5 to 21
+
             for (int x = (int)transform.position.x; x > (int)previousPosition.x; x--) {
                 if (x >= 21) {
                     _ongoing = false;
@@ -45,22 +73,35 @@ public class ThemeLine : MonoBehaviour {
                     Grid.Instance.ChangeSpriteOnThemeChangeAtColumn(x);
                 }
                 if (x == -4) {
-                    NextQueue.Instance.ChangeSpriteOnThemeChange();
+                    GroupsFactory.Instance.ChangeSpriteOnThemeChange();
                 }
+                /*
                 if (x >= (int)Grid.CurrentGroup.transform.position.x && !_currentGroupChanged) {
                     _currentGroupChanged = true;
                     foreach (Transform child in Grid.CurrentGroup) {
                         child.GetComponent<Block>().SpriteThemeChange();
                     }
                 }
+                */
             }
         }
     }
 
     public void BeginThemeChange() {
-        _startTime = GameManager.GameTime;
+        if (!isServer)
+            return;
+
+        _startTime = GameStatusSyncer.Instance.GameTime;
         _ongoing = true;
-        GetComponent<Renderer>().enabled = true;
+        RpcVisible(true);
         _currentGroupChanged = false;
     }
+
+    [ClientRpc]
+    public void RpcVisible(bool value) {
+        GetComponent<Renderer>().enabled = value;
+    }
+
+
+
 }

@@ -18,81 +18,151 @@
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : NetworkBehaviour {
+    #region Singleton
     private static GameManager _instance = null;
-
-    public enum GameModes {
-        Menu,
-        Voyage
-    }
-
-    public GameModes Mode = GameModes.Menu;
-    public float LastThemeSelected;
-
     public static GameManager Instance {
         get {
             if (_instance == null) {
                 _instance = GameObject.FindObjectOfType<GameManager>();
-
-                //Tell unity not to destroy this object when loading a new scene!
-                DontDestroyOnLoad(_instance.gameObject);
             }
-
             return _instance;
         }
     }
 
     private void Awake() {
-        //Check if instance already exists
         if (_instance == null)
-
-            //if not, set instance to this
             _instance = this;
-
-        //If instance already exists and it's not this:
         else if (_instance != this)
-
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
+    }
+    #endregion
 
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+    public enum InputCommand {
+        moveDown,
+        moveRight,
+        moveLeft,
+        anticlockwiseRotate,
+        clockwiseRotate
     }
 
-    public static float GameTime;
+    public enum Command {
+        init,
+        renewGroup
+    }
+    
+    public int playerNumber = 2;
+    public List<GameObject> startPos = new List<GameObject>();
+    private Dictionary<InputManager, Group> groupMap = new Dictionary<InputManager, Group>();
+    private Dictionary<InputManager, Transform> posMap = new Dictionary<InputManager, Transform>();
 
     // Use this for initialization
+    [Server]
     private void Start() {
+        //TODO all clients must set targetFrameRate
         Application.targetFrameRate = 60;
     }
 
-    public void Voyage() {
-        Mode = GameModes.Voyage;
-        LastThemeSelected = GameTime;
-        ThemeManager.Instance.RandomTheme();
-        SceneManager.LoadScene("game");
+    [Server]
+    public void GameStart() {
+        ThemeManager.Instance.ChangeTheme();
+        foreach (InputManager player in groupMap.Keys) {
+            player.GameStart();
+        }
+        GameStatusSyncer.Instance.isStart = true;
     }
 
+    [Server]
     public void GameOver() {
-        Grid.CurrentGroup = null;
-        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().GameOver();
-        Debug.Log("gameover");
+        posMap.Clear();
+        groupMap.Clear();
+        Time.timeScale = 0;
+        GameStatusSyncer.Instance.isStart = false;
+        Gameover.Instance.ToggleEndMenu();
     }
 
-    // Update is called once per frame
+    [Server]
+    public void gameControl (InputManager player, Command command) {
+        if (player == null)
+            return;
+
+        switch (command) {
+            case Command.init:
+                groupMap[player] = GroupsFactory.Instance.getNext();
+                posMap[player] = startPos[groupMap.Keys.Count - 1].transform;
+                groupMap[player].transform.position = posMap[player].position;
+                break;
+            case Command.renewGroup:
+                groupMap[player] = GroupsFactory.Instance.getNext();
+                groupMap[player].transform.position = posMap[player].position;
+                break;
+            default:
+                throw new System.Exception("Unknown Game Command: " + command);
+        }
+    }
+
+    [Server]
+    public void groupControl(InputManager player, InputCommand command) {
+        if (!existPlayer(player))
+            gameControl(player, Command.renewGroup);
+
+        switch (command) {
+            case InputCommand.moveDown:
+                groupMap[player].MoveDown();
+                break;
+            case InputCommand.moveLeft:
+                groupMap[player].MoveLeft();
+                break;
+            case InputCommand.moveRight:
+                groupMap[player].MoveRight();
+                break;
+            case InputCommand.anticlockwiseRotate:
+                groupMap[player].AnticlockwiseRotate();
+                break;
+            case InputCommand.clockwiseRotate:
+                groupMap[player].ClockwiseRotate();
+                break;
+            default:
+                throw new System.Exception("Unknown Input Command: " + command);
+        }        
+    }
+
+    [Server]
+    public InputManager getPlayer(Group grp) {
+        foreach (InputManager player in groupMap.Keys) {
+            if (grp == groupMap[player])
+                return player;
+        }
+        return null;
+    }
+
+    [Server]
+    public bool existPlayer(InputManager player) {
+        Group group = null;
+        return groupMap.TryGetValue(player, out group);
+    }
+
+    [Server]
+    public bool isPlayerGroup(Transform transform) {
+        foreach (InputManager player in groupMap.Keys) {
+            if (groupMap[player].transform == transform)
+                return true;
+        }
+        return false;
+    }
+    
+    [Server]
     private void Update() {
-        GameTime = Time.time;
-        //if (Mode == GameModes.Voyage && GameTime - LastThemeSelected >= 15) {
-        //    LastThemeSelected = GameTime;
-        //    ThemeManager.Instance.RandomTheme();
-        //    ChangeThemeDuringVoyage();
-        //}
-    }
+        if (!isServer)
+            return;
 
-    public void ChangeThemeDuringVoyage() {
-        GameObject themeLine = GameObject.Find("theme-line");
-        themeLine.GetComponent<ThemeLine>().BeginThemeChange();
+        GameStatusSyncer.Instance.GameTime = Time.time;
+        if (groupMap.Keys.Count == playerNumber && GameStatusSyncer.Instance.isStart == false) {
+            GameStart();
+        }
     }
 }

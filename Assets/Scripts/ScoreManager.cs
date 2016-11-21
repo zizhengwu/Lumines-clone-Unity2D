@@ -19,52 +19,61 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class ScoreManager : MonoBehaviour {
+public class ScoreManager : NetworkBehaviour {
+    public TextMesh ScoreFlag;
     public Text Score;
     public Text CurrentGameTime;
-    public Text Clear;
     public Text Highscore;
-    public Gameover Gameover;
-    private float _gameStartTime;
+    public Text Clear;
 
-    // Use this for initialization
-    private void Start() {
-        _gameStartTime = GameManager.GameTime;
-        Highscore.text = PlayerPrefs.GetInt("highscore", 0).ToString();
+    [SyncVar]
+    private int tempScore = 0;
+
+    #region Singleton
+    private static ScoreManager _instance;
+    public static ScoreManager Instance {
+        get {
+            if (_instance == null) {
+                _instance = FindObjectOfType<ScoreManager>();
+            }
+            return _instance;
+        }
     }
 
-    // Update is called once per frame
+    private void Awake() {
+        if (_instance == null)
+            _instance = this;
+        else if (_instance != this)
+            Destroy(gameObject);
+    }
+    #endregion
+    
+    [Client]
     private void Update() {
-        float gameOngoingTime = GameManager.GameTime - _gameStartTime;
-        CurrentGameTime.text = string.Format("{0}:{1:00}", (int)gameOngoingTime / 60, (int)gameOngoingTime % 60);
+        float elapseTime = GameStatusSyncer.Instance.GameTime - GameStatusSyncer.Instance.GameStartTime;
+        
+        ScoreFlag.text = tempScore.ToString();
+        Score.text = GameStatusSyncer.Instance.GameScore.ToString();
+        CurrentGameTime.text = string.Format("{0}:{1:00}", (int) elapseTime / 60, (int) elapseTime % 60);
+        Highscore.text = GameStatusSyncer.Instance.GameHighScore.ToString();
+        Clear.text = string.Format("{0} %", (GameStatusSyncer.Instance.GameScore % 50) * 2);
     }
 
+    [Server]
     public void AddScore(int score) {
-        GetComponent<TextMesh>().text = (int.Parse(GetComponent<TextMesh>().text) + score).ToString();
-        int preScore = int.Parse(Score.text);
-        int afterScore = preScore + score;
-        UpdateProgress(preScore, afterScore);
-        if (afterScore > int.Parse(Highscore.text)) {
-            Highscore.text = afterScore.ToString();
-        }
-        Score.text = afterScore.ToString();
-    }
+        tempScore += score;
 
+        int originalScore = GameStatusSyncer.Instance.GameScore;
+        int finalScore = GameStatusSyncer.Instance.GameScore = originalScore + score;
+        if ((originalScore < 10 && finalScore >= 10) || ((originalScore / 50) != (finalScore / 50))) {
+            ThemeManager.Instance.ChangeTheme();
+        }
+    }
+    
+    [Server]
     public void ToZero() {
-        GetComponent<TextMesh>().text = "0";
-    }
-
-    private void UpdateProgress(int preScore, int afterScore) {
-        Clear.text = string.Format("{0} %", (afterScore % 50) * 2);
-        if ((preScore < 10 && afterScore >= 10) || ((preScore / 50) != (afterScore / 50))) {
-            ThemeManager.Instance.RandomTheme();
-            GameManager.Instance.ChangeThemeDuringVoyage();
-        }
-    }
-
-    public void GameOver() {
-        Time.timeScale = 0;
-        Gameover.ToggleEndMenu(int.Parse(Score.text));
+        tempScore = 0;
     }
 }

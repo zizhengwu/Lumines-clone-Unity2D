@@ -18,66 +18,44 @@
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class InputManager : MonoBehaviour {
-    private static InputManager _instance = null;
-
+public class InputManager : NetworkBehaviour {
+    /*
     private int _moveFingerId = -1;
     private int _downFingerId = -1;
     private bool _moveFingerReady = true;
     private bool _downFingerReady = true;
     private Transform _preGroup = null;
-    public float ScreenWidth;
-    public float ScreenHeight;
+    */
+    private float ScreenWidth;
+    private float ScreenHeight;
     public float FallThreshold = 0.7f;
     private float _clockAndAntiBoundary;
     private float _upDownBoundary;
-    private float _lastFall;
+    private float _lastFall = 0f;
 
-    public static InputManager Instance {
-        get {
-            if (_instance == null) {
-                _instance = GameObject.FindObjectOfType<InputManager>();
+    // Use this for initialization
+    public override void OnStartLocalPlayer() {    
+        updateBoundaray();
+        CmdToServer("register");
+    }
 
-                //Tell unity not to destroy this object when loading a new scene!
-                DontDestroyOnLoad(_instance.gameObject);
-            }
-
-            return _instance;
-        }
+    public void GameStart() {
+        Debug.Log("GameStart");
+        _lastFall = GameStatusSyncer.Instance.GameTime;
     }
 
     public void GameOver() {
+        /*
         _moveFingerId = -1;
         _downFingerId = -1;
         _moveFingerReady = true;
         _downFingerReady = true;
         _preGroup = null;
+        */
     }
-
-    private void Awake() {
-        //Check if instance already exists
-        if (_instance == null)
-
-            //if not, set instance to this
-            _instance = this;
-
-        //If instance already exists and it's not this:
-        else if (_instance != this)
-
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
-
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
-    }
-
-    // Use this for initialization
-    private void Start() {
-        updateBoundaray();
-        _lastFall = GameManager.GameTime;
-    }
-
+    
     private void updateBoundaray() {
         ScreenWidth = Screen.width;
         ScreenHeight = Screen.height;
@@ -86,12 +64,45 @@ public class InputManager : MonoBehaviour {
         _upDownBoundary = rightUp.y / 2;
     }
 
+    [Command]
+    private void CmdToServer(string command) {
+        switch (command) {
+            case "register":
+                GameManager.Instance.gameControl(this, GameManager.Command.init);
+                break;
+            case "moveDown":
+                GameManager.Instance.groupControl(this, GameManager.InputCommand.moveDown);
+                break;
+            case "moveLeft":
+                GameManager.Instance.groupControl(this, GameManager.InputCommand.moveLeft);
+                break;
+            case "moveRight":
+                GameManager.Instance.groupControl(this, GameManager.InputCommand.moveRight);
+                break;
+            case "clockwiseRotate":
+                GameManager.Instance.groupControl(this, GameManager.InputCommand.clockwiseRotate);
+                break;
+            case "anticlockwiseRotate":
+                GameManager.Instance.groupControl(this, GameManager.InputCommand.anticlockwiseRotate);
+                break;
+            default:
+                Debug.Log("Unrecognized command: " + command);
+                break;
+        }
+    }
+
     // Update is called once per frame
     private void Update() {
         // control group here
-        if (Grid.CurrentGroup == null) {
+        if (!isLocalPlayer)
+            return;
+
+        if (GameStatusSyncer.Instance.isStart == false) {
             return;
         }
+
+        /*
+        #region Touch Support
         // Handle native touch events
         foreach (Touch touch in Input.touches) {
             HandleTouch(touch.fingerId, touch.position, touch.phase);
@@ -108,32 +119,31 @@ public class InputManager : MonoBehaviour {
                 HandleTouch(10, Input.mousePosition, TouchPhase.Ended);
             }
         }
-        // Keyboard
+        #endregion
+        */
+        #region KeyBoard Support
         if (Input.GetKeyDown(KeyCode.A)) {
-            Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+            CmdToServer("moveLeft");
         }
         if (Input.GetKeyDown(KeyCode.D)) {
-            Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+            CmdToServer("moveRight");
         }
         if (Input.GetKeyDown(KeyCode.S)) {
-            Grid.CurrentGroup.GetComponent<Group>().MoveDown();
+            CmdToServer("moveDown");
         }
         if (Input.GetKeyDown(KeyCode.K)) {
-            Grid.CurrentGroup.GetComponent<Group>().ClockwiseRotate();
+            CmdToServer("clockwiseRotate");
         }
         if (Input.GetKeyDown(KeyCode.J)) {
-            Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
+            CmdToServer("anticlockwiseRotate");
         }
-        if (GameManager.GameTime - _lastFall > FallThreshold) {
-            Grid.CurrentGroup.GetComponent<Group>().MoveDown();
-            updateLastFall();
+        if (GameStatusSyncer.Instance.GameTime - _lastFall > FallThreshold) {
+            CmdToServer("moveDown");
+            _lastFall = GameStatusSyncer.Instance.GameTime;
         }
+        #endregion
     }
-
-    private void updateLastFall() {
-        _lastFall = GameManager.GameTime;
-    }
-
+    /*
     private void HandleTouch(int touchFingerId, Vector3 touchPosition, TouchPhase touchPhase) {
         Vector2 position = ScreenToGridPoint(touchPosition);
         var x = position.x;
@@ -158,8 +168,8 @@ public class InputManager : MonoBehaviour {
                 _downFingerReady = true;
             }
             else if (_downFingerReady) {
-                Grid.CurrentGroup.GetComponent<Group>().MoveDown();
-                updateLastFall();
+                CmdToServer("moveDown");
+                CmdToServer("updateLastFall");
             }
             return;
         }
@@ -168,15 +178,15 @@ public class InputManager : MonoBehaviour {
             if (x > 17) {
                 if (y < _upDownBoundary) {
                     _downFingerId = touchFingerId;
-                    Grid.CurrentGroup.GetComponent<Group>().MoveDown();
-                    updateLastFall();
+                    CmdToServer("moveDown");
+                    CmdToServer("updateLastFall");
                 }
                 else {
                     if (x < _clockAndAntiBoundary) {
-                        Grid.CurrentGroup.GetComponent<Group>().AnticlockwiseRotate();
+                        CmdToServer("anticlockwiseRotate");
                     }
                     else {
-                        Grid.CurrentGroup.GetComponent<Group>().ClockwiseRotate();
+                        CmdToServer("clockwiseRotate");
                     }
                 }
             }
@@ -187,10 +197,10 @@ public class InputManager : MonoBehaviour {
         // move only applies to moveFinger
         else if (touchPhase != TouchPhase.Ended && touchFingerId == _moveFingerId && _moveFingerReady) {
             if (Mathf.Round(position.x) < Grid.CurrentGroup.transform.position.x) {
-                Grid.CurrentGroup.GetComponent<Group>().MoveLeft();
+                CmdToServer("moveLeft");
             }
             else if (Mathf.Round(position.x) > Grid.CurrentGroup.transform.position.x) {
-                Grid.CurrentGroup.GetComponent<Group>().MoveRight();
+                CmdToServer("moveRight");
             }
         }
         // end only applies to moveFinger
@@ -201,13 +211,13 @@ public class InputManager : MonoBehaviour {
             }
         }
     }
-
+    */
     public Vector3 ScreenToGridPoint(Vector3 position) {
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(position);
         return NormalizeCameraPoint(worldPoint);
     }
 
-    public Vector3 NormalizeCameraPoint(Vector3 position) {
+    private Vector3 NormalizeCameraPoint(Vector3 position) {
         return 8f / 5f * position + new Vector3(8, 7, 10);
     }
 }

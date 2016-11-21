@@ -20,23 +20,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class SoundManager : MonoBehaviour {
-    public static SoundManager _instance;
-
-    public static SoundManager Instance {
-        get {
-            if (_instance == null) {
-                _instance = GameObject.FindObjectOfType<SoundManager>();
-
-                //Tell unity not to destroy this object when loading a new scene!
-                DontDestroyOnLoad(_instance.gameObject);
-            }
-
-            return _instance;
-        }
-    }
-
+// Multiple instance objects
+public class SoundManager : NetworkBehaviour {
     private AudioSource left;
     private AudioSource right;
     private AudioSource theme;
@@ -45,7 +32,7 @@ public class SoundManager : MonoBehaviour {
     private AudioSource hit;
     private List<AudioSource> clear;
     private List<AudioSource>.Enumerator clearIterator;
-    private float lastClear = GameManager.GameTime;
+    private float lastClear = 0;
 
     public enum Sound {
         Left,
@@ -57,37 +44,42 @@ public class SoundManager : MonoBehaviour {
         Clear
     }
 
-    private void Awake() {
-        //Check if instance already exists
-        if (_instance == null)
+    #region Singleton
+    private static SoundManager _instance;
+    public static SoundManager Instance {
+        get {
+            if (_instance == null) {
+                _instance = GameObject.FindObjectOfType<SoundManager>();
+            }
 
-            //if not, set instance to this
-            _instance = this;
-
-        //If instance already exists and it's not this:
-        else if (_instance != this)
-
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
-
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+            return _instance;
+        }
     }
 
-    public void HandleThemeChanged(object sender, EventArgs args) {
-        //string themePathPrefix = "Themes/" + ThemeManager.Instance.CurrentThemeName + "/Sound/";
+    private void Awake() {
+        if (_instance == null)
+            _instance = this;
+        else if (_instance != this)
+            Destroy(gameObject);
+    }
+    #endregion
+
+    #region HandleThemeChange
+    [ClientRpc]
+    public void RpcHandleThemeChange(object sender, EventArgs args) {
         var rnd = new System.Random();
-        string themePathPrefix = "Sounds/" + rnd.Next(1,6) + "/";
+        string prefix = "Sounds/" + rnd.Next(1, 6) + "/";
+
         theme.volume = 0.5f;
 
-        left.clip = Resources.Load(themePathPrefix + "left") as AudioClip;
-        right.clip = Resources.Load(themePathPrefix + "right") as AudioClip;
-        theme.clip = Resources.Load(themePathPrefix + "theme") as AudioClip;
-        clockwise.clip = Resources.Load(themePathPrefix + "clockwise") as AudioClip;
-        anticlockwise.clip = Resources.Load(themePathPrefix + "anticlockwise") as AudioClip;
-        hit.clip = Resources.Load(themePathPrefix + "hit") as AudioClip;
+        left.clip = Resources.Load(prefix + "left") as AudioClip;
+        right.clip = Resources.Load(prefix + "right") as AudioClip;
+        theme.clip = Resources.Load(prefix + "theme") as AudioClip;
+        clockwise.clip = Resources.Load(prefix + "clockwise") as AudioClip;
+        anticlockwise.clip = Resources.Load(prefix + "anticlockwise") as AudioClip;
+        hit.clip = Resources.Load(prefix + "hit") as AudioClip;
         for (int i = 1; i <= 5; i++) {
-            AudioClip clip = Resources.Load(themePathPrefix + i) as AudioClip;
+            AudioClip clip = Resources.Load(prefix + i) as AudioClip;
             clear[i - 1].clip = clip;
         }
         GetNewClearIterator();
@@ -96,14 +88,43 @@ public class SoundManager : MonoBehaviour {
             PlaySound(Sound.Theme);
         }
     }
+    #endregion
 
-    public void StopTheme() {
+    #region StopTheme
+    [Command] 
+    public void CmdStopTheme() {
+        if (!isServer)
+            return;
+
+        if (theme) {
+            RpcStopTheme();
+        }
+    }
+    
+    [ClientRpc]
+    private void RpcStopTheme() {
         if (theme) {
             theme.Stop();
         }
     }
+    #endregion
 
-    public void PlaySound(Sound sound) {
+    #region PlaySound
+    [Command]
+    public void CmdPlaySound(Sound sound) {
+        if (!isServer)
+            return;
+
+        RpcPlaySound(sound);
+    }
+
+    [ClientRpc]
+    private void RpcPlaySound(Sound sound) {
+        PlaySound(sound);
+    }
+
+    [Client]
+    private void PlaySound(Sound sound) {
         if (sound == Sound.Left) {
             left.Play();
         }
@@ -123,7 +144,7 @@ public class SoundManager : MonoBehaviour {
             theme.Play();
         }
         if (sound == Sound.Clear) {
-            if (GameManager.GameTime - lastClear >= 2) {
+            if (GameStatusSyncer.Instance.GameTime - lastClear >= 2) {
                 GetNewClearIterator();
                 clearIterator.Current.Play();
                 clearIterator.MoveNext();
@@ -134,14 +155,16 @@ public class SoundManager : MonoBehaviour {
                     GetNewClearIterator();
                 }
             }
-            lastClear = GameManager.GameTime;
+            lastClear = GameStatusSyncer.Instance.GameTime;
         }
     }
 
-    public void GetNewClearIterator() {
+    [Client]
+    private void GetNewClearIterator() {
         clearIterator = clear.GetEnumerator();
         clearIterator.MoveNext();
     }
+    #endregion
 
     // Use this for initialization
     private void Start() {
@@ -155,9 +178,5 @@ public class SoundManager : MonoBehaviour {
         for (int i = 1; i <= 5; i++) {
             clear.Add(gameObject.AddComponent<AudioSource>());
         }
-    }
-
-    // Update is called once per frame
-    private void Update() {
     }
 }

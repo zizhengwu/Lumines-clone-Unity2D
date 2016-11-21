@@ -67,6 +67,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013145226600}
+  - 114: {fileID: 114000011293764356}
   m_Layer: 9
   m_Name: Spring
   m_TagString: Untagged
@@ -560,6 +561,38 @@ MonoBehaviour:
   speed: 0
   current: {fileID: 0}
   tileSize: 0
+--- !u!114 &114000011293764356
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011033531644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 106
+    i1: 2
+    i2: 128
+    i3: 220
+    i4: 133
+    i5: 115
+    i6: 66
+    i7: 244
+    i8: 139
+    i9: 76
+    i10: 127
+    i11: 141
+    i12: 155
+    i13: 46
+    i14: 159
+    i15: 15
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000011861268818
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -17,22 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using Random = UnityEngine.Random;
 using UnityEngine.Networking;
 
-public class Gameover : MonoBehaviour {
+public class BackgroundFactory : NetworkBehaviour {
+    private GameObject _currentThemeGameObject;
+    public GameObject[] BackgroundGameObjects;
+
     #region Singleton
-    private static Gameover _instance = null;
-    public static Gameover Instance {
+    private static BackgroundFactory _instance = null;
+    public static BackgroundFactory Instance {
         get {
             if (_instance == null) {
-                _instance = FindObjectOfType<Gameover>();
+                _instance = GameObject.FindObjectOfType<BackgroundFactory>();
             }
             return _instance;
         }
     }
+
     private void Awake() {
         if (_instance == null)
             _instance = this;
@@ -41,35 +45,15 @@ public class Gameover : MonoBehaviour {
     }
     #endregion
 
-    public Text Score;
-    public GameObject AchiveHighscore;
-
-    public void Start() {
-        gameObject.SetActive(false);
-    }
-
-    public void ToggleEndMenu() {
-        SoundManager.Instance.CmdStopTheme();
-        gameObject.SetActive(true);
-
-        int score = GameStatusSyncer.Instance.GameScore;
-        Score.text = string.Format("Score          {0}", score.ToString());
-        int oldHighscore = PlayerPrefs.GetInt("highscore", 0);
-        if (score > oldHighscore) {
-            AchiveHighscore.SetActive(true);
-            PlayerPrefs.SetInt("highscore", score);
+    [Server]
+    public void HandleThemeChanged(object sender, EventArgs args) {
+        if (_currentThemeGameObject != null) {
+            Destroy(_currentThemeGameObject);
+            NetworkServer.Destroy(_currentThemeGameObject);
         }
-    }
-
-    public void BackToStartScreen() {
-        NetworkManager ntmanager = FindObjectOfType<NetworkManager>();
-
-        if (FindObjectOfType<GameManager>() != null)
-            ntmanager.StopHost();
-        else
-            ntmanager.StopClient();
         
-
-        Time.timeScale = 1;
+        GameObject blkgrd = BackgroundGameObjects[Random.Range(0, BackgroundGameObjects.Length)];
+        _currentThemeGameObject = (GameObject)Instantiate(blkgrd, transform.localPosition, Quaternion.identity);
+        NetworkServer.Spawn(_currentThemeGameObject);
     }
 }

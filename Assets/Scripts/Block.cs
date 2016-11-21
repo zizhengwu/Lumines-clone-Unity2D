@@ -18,9 +18,10 @@
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Block : MonoBehaviour {
-
+// Multiple instance object in Network
+public class Block : NetworkBehaviour {
     public enum State {
         Normal,
         ToBeErased,
@@ -28,101 +29,125 @@ public class Block : MonoBehaviour {
         InsideCurrentStreak
     };
 
-    public bool GoDown = false;
-    public int DownTarget;
-    public int Type = -1;
-    private State status = State.Normal;
+    // Used for setting up animator on Server
+    private bool _goDown = false;
+    private int _downTarget;
 
+    public bool Enabled {
+        get {
+            return transform.parent.GetComponent<Group>().getBlockEnabled(this);
+        }
+    }
+    public int Type {
+        get {
+            return transform.parent.GetComponent<Group>().getBlockType(this);
+        }
+    }
     public State Status {
-        get { return status; }
+        get {
+            return transform.parent.GetComponent<Group>().getBlockStatus(this);
+        }
         set {
-            if (value != status) {
-                if (value == State.ToBeErased) {
-                    if (status == State.InsideCurrentStreak) {
+            State current = transform.parent.GetComponent<Group>().getBlockStatus(this);
+            if (value == current)
+                return;
+
+
+            Group grp = transform.parent.GetComponent<Group>();
+            switch (value) {
+                case State.Normal:
+                case State.InsideCurrentStreak:
+                    grp.setBlockStatus(this, value);
+                    break;
+                case State.ToBeErased:
+                    if (current == State.InsideCurrentStreak)
                         return;
-                    }
-                    if (GoDown) {
-                        status = State.ToBeErasedWhileFallingDown;
-                    }
-                    else {
-                        status = State.ToBeErased;
-                        ChangeSprite(State.ToBeErased);
-                    }
-                }
-                else if (value == State.Normal) {
-                    status = State.Normal;
-                    ChangeSprite(State.Normal);
-                }
-                else if (value == State.InsideCurrentStreak) {
-                    status = State.InsideCurrentStreak;
-                    ChangeSprite(State.InsideCurrentStreak);
-                }
+
+                    if(_goDown)
+                        grp.setBlockStatus(this, State.ToBeErasedWhileFallingDown);
+                    else
+                        grp.setBlockStatus(this, value);
+                    break;
             }
         }
     }
 
+    [Server]
+    public void init(int value) {
+        ;
+    }
+
+    [Server]
+    public void setDownTarget(int target) {
+        _downTarget = target;
+        _goDown = true;
+    }
+
+    [Client]
     private void ChangeSprite(State value) {
         if (value == State.ToBeErased) {
             switch (Type) {
                 case 0:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0ToBeErased;
+                    GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0ToBeErased;
                     break;
 
                 case 1:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1ToBeErased;
+                    GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1ToBeErased;
                     break;
             }
         }
         else if (value == State.InsideCurrentStreak) {
-            gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.InsideClearance;
+            GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.InsideClearance;
         }
         else if (value == State.Normal) {
             switch (Type) {
                 case 0:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
+                    GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block0;
                     break;
 
                 case 1:
-                    gameObject.GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
+                    GetComponent<SpriteRenderer>().sprite = ThemeManager.Instance.CurrentTheme.Block1;
                     break;
             }
         }
     }
 
-    // Use this for initialization
-    private void Start() {
-    }
-
+    [Client]
     public void SpriteThemeChange() {
         if (Status != State.InsideCurrentStreak) {
             ChangeSprite(Status);
         }
-    }
-
-    // Update is called once per frame
-    private void Update() {
-        if (GoDown) {
-            DownToDepth();
+        else {
+            ;
         }
     }
 
-    public bool IsSameType(Block other) {
-        return Type == other.Type;
-    }
-
-    private void DownToDepth() {
-        Vector3 position = transform.position;
-        Vector2 roundedPosition = Grid.Instance.RoundVector2(transform.position);
-        if (position.y - 0.5 > DownTarget) {
-            transform.position = new Vector3(position.x, position.y - 0.4f, position.z);
+    [Client]
+    private void Update() {
+        if (Enabled == false) {
+            enabled = false;
+            GetComponent<SpriteRenderer>().enabled = false;
+            return;
         }
         else {
-            transform.position = new Vector3(position.x, roundedPosition.y + 0.5f, position.z);
-            GoDown = false;
-            if (status == State.ToBeErasedWhileFallingDown) {
-                status = State.ToBeErased;
-                ChangeSprite(State.ToBeErased);
+            SpriteThemeChange();
+            if (_goDown) {
+                Vector2 roundedPosition = Grid.Instance.RoundVector2(transform.position);
+
+                Vector3 targetPosition = new Vector3(transform.position.x, _downTarget + 0.5f, transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10*Time.deltaTime);
+                if (transform.position == targetPosition) {
+                    _goDown = false;
+                    if (Status == State.ToBeErasedWhileFallingDown) {
+                        Status = State.ToBeErased;
+                    }
+                }
             }
         }
+    }
+
+    [Client]
+    public bool IsSameType(Block other) {
+        return Type == other.Type;
     }
 }

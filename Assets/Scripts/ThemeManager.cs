@@ -21,76 +21,69 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.Networking;
 
-public class ThemeManager : MonoBehaviour {
-    public List<Theme> Themes;
-    public Theme CurrentTheme;
+public class ThemeManager : NetworkBehaviour {
     public String[] ThemeNames;
-    private string _currentThemeName;
+    private List<Theme> Themes;
 
-    public event EventHandler ThemeChanged;
-
-    public string CurrentThemeName {
-        set {
-            _currentThemeName = value;
-            EventHandler handler = ThemeChanged;
-            handler(this, EventArgs.Empty);
+    public Theme CurrentTheme {
+        get {
+            return Themes[_currentThemeIndex];
         }
-        get { return _currentThemeName; }
+    }
+    public string CurrentThemeName {
+        get {
+            return ThemeNames[_currentThemeIndex];
+        }
+        set {
+            for (int i = 0; i < ThemeNames.Length; i++) {
+                if (ThemeNames[i] == value) {
+                    _currentThemeIndex = i;
+                    break;
+                }
+            }
+        }
+        
     }
 
-    private static ThemeManager _instance;
+    [SyncVar (hook = "CmdHandleThemeChange")]
+    public int _currentThemeIndex;
 
+    [Command]
+    private void CmdHandleThemeChange(int themeIndex) {
+        SoundManager.Instance.RpcHandleThemeChange(this, EventArgs.Empty);
+        BackgroundFactory.Instance.HandleThemeChanged(this, EventArgs.Empty);
+        //ThemeLine.Instance.BeginThemeChange();
+    }
+
+    #region Sigleton
+    private static ThemeManager _instance;
     public static ThemeManager Instance {
         get {
             if (_instance == null) {
                 _instance = GameObject.FindObjectOfType<ThemeManager>();
-
-                //Tell unity not to destroy this object when loading a new scene!
-                DontDestroyOnLoad(_instance.gameObject);
             }
-
             return _instance;
         }
     }
 
-    // Use this for initialization
     private void Awake() {
         if (_instance == null) {
-            //If I am the first instance, make me the Singleton
             _instance = this;
-            ThemeChanged += SoundManager.Instance.HandleThemeChanged;
-            ThemeChanged += BackgroundManager.Instance.HandleThemeChanged;
-            DontDestroyOnLoad(this);
         }
-        else {
-            //If a Singleton already exists and you find
-            //another reference in scene, destroy it!
-            if (this != _instance)
-                Destroy(this.gameObject);
+        else if (_instance != this) {
+            Destroy(this.gameObject);
         }
     }
-
-    public void RandomTheme() {
-        string nextThemeName = CurrentThemeName;
-        int nextThemeNumber = -1;
-        while (nextThemeName == CurrentThemeName) {
-            nextThemeNumber = Random.Range(0, Themes.Count);
-            nextThemeName = Themes[nextThemeNumber].ThemeName;
-        }
-        Debug.Log(nextThemeName);
-        CurrentTheme = Themes[nextThemeNumber];
-        CurrentThemeName = CurrentTheme.ThemeName;
-    }
-
-    // Update is called once per frame
-    private void Update() {
-    }
+    #endregion
 
     public void ChangeTheme() {
-        ThemeManager.Instance.RandomTheme();
-        GameObject themeLine = GameObject.Find("theme-line");
-        themeLine.GetComponent<ThemeLine>().BeginThemeChange();
+        int rnd = Random.Range(0, Themes.Count);
+        while (rnd == _currentThemeIndex) {
+            rnd = Random.Range(0, Themes.Count);
+        }
+        _currentThemeIndex = rnd;
     }
 
     private void Start() {
@@ -98,5 +91,6 @@ public class ThemeManager : MonoBehaviour {
         foreach (String themeName in ThemeNames) {
             Themes.Add(new Theme(themeName));
         }
+        ChangeTheme();
     }
 }

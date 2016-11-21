@@ -179,6 +179,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011106348690}
+  - 114: {fileID: 114000010671271394}
   m_Layer: 9
   m_Name: Desert
   m_TagString: Untagged
@@ -588,6 +589,38 @@ MonoBehaviour:
   speed: -0.05
   current: {fileID: 0}
   tileSize: 29.32
+--- !u!114 &114000010671271394
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012233076646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 9
+    i1: 70
+    i2: 3
+    i3: 153
+    i4: 30
+    i5: 2
+    i6: 46
+    i7: 100
+    i8: 121
+    i9: 63
+    i10: 73
+    i11: 252
+    i12: 183
+    i13: 245
+    i14: 57
+    i15: 73
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000013284874822
 MonoBehaviour:
   m_ObjectHideFlags: 1

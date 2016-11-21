@@ -18,25 +18,30 @@
  */
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Line : MonoBehaviour {
-
-    // Use this for initialization
+// Multiple instance Object
+public class MovingLine : NetworkBehaviour {
+    public float speed = 0.25f;
+    
+    private Vector3 _target;
     private void Start() {
-    }
-
-    // Update is called once per frame
-    private void Update() {
+        _target = new Vector3(16, transform.position.y, transform.position.z);
     }
 
     private void FixedUpdate() {
-        Vector3 previousPosition = transform.position;
-        transform.position = new Vector3(0 + (16 - 0) * (GameManager.GameTime % 4) / 4, previousPosition.y, previousPosition.z);
-        // x is from 0 to 15
-        int x = (int)transform.position.x;
-        if ((int)transform.position.x != (int)previousPosition.x) {
-            Grid.Instance.JudgeInsideClearanceAtColumn(x);
-            Grid.Instance.ClearBeforeColumn(x);
+        if (!isServer)  
+            return;
+
+        // 4s for a complete span, x in [0, 16)
+        Vector3 nextPosition = Vector3.MoveTowards(transform.position, _target, Time.fixedDeltaTime/speed);
+        if (nextPosition == _target) nextPosition.x = 0;
+        
+        if ((int) nextPosition.x != (int) transform.position.x) {
+            int column = (int) nextPosition.x;
+            Grid.Instance.JudgeInsideClearanceAtColumn(column);
+            Grid.Instance.ClearBeforeColumn(column);
         }
+        transform.position = nextPosition;
     }
 }

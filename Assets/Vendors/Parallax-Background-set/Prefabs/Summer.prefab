@@ -243,6 +243,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011396177100}
+  - 114: {fileID: 114000010913958962}
   m_Layer: 9
   m_Name: Summer
   m_TagString: Untagged
@@ -560,6 +561,38 @@ MonoBehaviour:
   speed: -0.04
   current: {fileID: 0}
   tileSize: 30.54
+--- !u!114 &114000010913958962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012775213488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 122
+    i1: 21
+    i2: 231
+    i3: 139
+    i4: 28
+    i5: 55
+    i6: 172
+    i7: 180
+    i8: 248
+    i9: 163
+    i10: 230
+    i11: 88
+    i12: 129
+    i13: 208
+    i14: 166
+    i15: 186
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000012595080992
 MonoBehaviour:
   m_ObjectHideFlags: 1

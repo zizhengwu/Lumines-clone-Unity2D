@@ -21,59 +21,41 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Grid : MonoBehaviour {
-
+// Server Only Object
+public class Grid : NetworkBehaviour {
     // Grid size
-    public static int Width = 16;
+    public const int Width = 16;
+    public const int Height = 12;
 
-    public static int Height = 12;
-
-    public GameObject InsideClearanceAnimationBlock;
-    public GameObject Erased;
-    public GameObject Clear;
+    public GameObject InsideClearanceAnimationBlockPrefab;
+    public GameObject ErasedPrefab;
+    public GameObject ClearPrefab;
     public static Transform[,] grid = new Transform[Width, Height];
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
-    public static Transform CurrentGroup;
 
+    #region Singleton
     private static Grid _instance = null;
-
     public static Grid Instance {
         get {
             if (_instance == null) {
                 _instance = GameObject.FindObjectOfType<Grid>();
-
-                //Tell unity not to destroy this object when loading a new scene!
-                DontDestroyOnLoad(_instance.gameObject);
             }
-
             return _instance;
         }
     }
 
     private void Awake() {
-        //Check if instance already exists
         if (_instance == null)
-
-            //if not, set instance to this
             _instance = this;
-
-        //If instance already exists and it's not this:
         else if (_instance != this)
-
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
-
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
     }
-
-    // Use this for initialization
-    private void Start() {
-    }
-
+    #endregion
+    
     public void GameOver() {
         grid = new Transform[Width, Height];
         ShouldClear = new bool[Width, Height];
@@ -86,7 +68,7 @@ public class Grid : MonoBehaviour {
 
     public bool BlocksInsideClearance(List<IntVector2> coordinates) {
         foreach (IntVector2 coordinate in coordinates) {
-            if (grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
+            if (grid[coordinate.x, coordinate.y].GetComponent<Block>().Status == Block.State.ToBeErasedWhileFallingDown || grid[coordinate.x, coordinate.y].GetComponent<Block>().Status == Block.State.ToBeErased) {
                 return true;
             }
         }
@@ -98,17 +80,13 @@ public class Grid : MonoBehaviour {
             if (grid[column, i] == null) {
                 return;
             }
-            if (grid[column, i] && grid[column, i].gameObject.GetComponent<Block>().Status == Block.State.ToBeErased) {
-                Instantiate(InsideClearanceAnimationBlock, new Vector3(column + 0.5f, i + 0.5f), Quaternion.identity);
-                grid[column, i].gameObject.GetComponent<Block>().Status = Block.State.InsideCurrentStreak;
+            if (grid[column, i] && grid[column, i].GetComponent<Block>().Status == Block.State.ToBeErased) {
+                GameObject InsideClearanceAnimationBlock = (GameObject) Instantiate(InsideClearanceAnimationBlockPrefab, new Vector3(column + 0.5f, i + 0.5f), Quaternion.identity);
+                NetworkServer.Spawn(InsideClearanceAnimationBlock);
+
+                grid[column, i].GetComponent<Block>().Status = Block.State.InsideCurrentStreak;
                 ShouldClear[column, i] = true;
             }
-        }
-    }
-
-    public void JudgeClearAtColumns(List<int> columns) {
-        foreach (var column in columns) {
-            JudgeClearAtColumn(column);
         }
     }
 
@@ -122,7 +100,7 @@ public class Grid : MonoBehaviour {
             if (grid[column, h + 1] == null) {
                 break;
             }
-            if (grid[column, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h + 1].gameObject.GetComponent<Block>())) {
+            if (grid[column, h].GetComponent<Block>().IsSameType(grid[column, h + 1].GetComponent<Block>())) {
                 int columnLeft = column - 1;
                 int columnRight = column + 1;
                 List<int> potentialColumns = new List<int>();
@@ -135,8 +113,8 @@ public class Grid : MonoBehaviour {
 
                 foreach (int potentialColumn in potentialColumns) {
                     if (grid[potentialColumn, h] && grid[potentialColumn, h + 1] &&
-                        grid[potentialColumn, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
-                        grid[potentialColumn, h + 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
+                        grid[potentialColumn, h].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>()) &&
+                        grid[potentialColumn, h + 1].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>())) {
                         toOrNotToBeErased[h] = true;
                         toOrNotToBeErased[h + 1] = true;
                         break;
@@ -155,10 +133,10 @@ public class Grid : MonoBehaviour {
                 continue;
             }
             if (toOrNotToBeErased[h]) {
-                grid[column, h].gameObject.GetComponent<Block>().Status = Block.State.ToBeErased;
+                grid[column, h].GetComponent<Block>().Status = Block.State.ToBeErased;
             }
             else {
-                grid[column, h].gameObject.GetComponent<Block>().Status = Block.State.Normal;
+                grid[column, h].GetComponent<Block>().Status = Block.State.Normal;
             }
         }
     }
@@ -168,7 +146,7 @@ public class Grid : MonoBehaviour {
             if (grid[column, h] == null) {
                 continue;
             }
-            grid[column, h].gameObject.GetComponent<Block>().SpriteThemeChange();
+            grid[column, h].GetComponent<Block>().SpriteThemeChange();
         }
     }
 
@@ -177,17 +155,19 @@ public class Grid : MonoBehaviour {
         int right = column + 1;
         for (int h = 0; h < Height; h++) {
             if (grid[column, h] != null && toOrNotToBeErased[h]) {
-                if (h - 1 >= 0 && toOrNotToBeErased[h - 1] && grid[column, h].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+                if (h - 1 >= 0 && toOrNotToBeErased[h - 1] && grid[column, h].GetComponent<Block>().Status == Block.State.Normal) {
                     // should be a clearance animation, left or right to be determined
                     if (left >= 0 && grid[left, h] && grid[left, h - 1] &&
-                        grid[left, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
-                        grid[left, h - 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
-                        Instantiate(Erased, new Vector3(column, h, -1), Quaternion.identity);
+                        grid[left, h].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>()) &&
+                        grid[left, h - 1].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>())) {
+                        GameObject Erased = (GameObject) Instantiate(ErasedPrefab, new Vector3(column, h, -1), Quaternion.identity);
+                        NetworkServer.Spawn(Erased);
                     }
                     if (right < Width && grid[right, h] && grid[right, h - 1] &&
-                        grid[right, h].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>()) &&
-                        grid[right, h - 1].gameObject.GetComponent<Block>().IsSameType(grid[column, h].gameObject.GetComponent<Block>())) {
-                        Instantiate(Erased, new Vector3(column + 1, h, -1), Quaternion.identity);
+                        grid[right, h].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>()) &&
+                        grid[right, h - 1].GetComponent<Block>().IsSameType(grid[column, h].GetComponent<Block>())) {
+                        GameObject Erased = (GameObject) Instantiate(ErasedPrefab, new Vector3(column + 1, h, -1), Quaternion.identity);
+                        NetworkServer.Spawn(Erased);
                     }
                 }
             }
@@ -195,11 +175,9 @@ public class Grid : MonoBehaviour {
     }
 
     public void JudgeAllColumns() {
-        var columns = new List<int>();
         for (int i = 0; i < Width; i++) {
-            columns.Add(i);
+            JudgeClearAtColumn(i);
         }
-        JudgeClearAtColumns(columns);
     }
 
     public void ClearAll() {
@@ -216,12 +194,9 @@ public class Grid : MonoBehaviour {
     }
 
     private void destroyBlockAtGrid(int column, int height) {
-        GameObject parent = grid[column, height].parent.gameObject;
-        parent.GetComponent<Group>().blocksRemaining -= 1;
-        Destroy(grid[column, height].gameObject);
-        if (parent.GetComponent<Group>().blocksRemaining == 0) {
-            Destroy(parent);
-        }
+        Group grp = grid[column, height].parent.GetComponent<Group>();
+
+        grp.destroy(grid[column, height].GetComponent<Block>());
         grid[column, height] = null;
         ShouldClear[column, height] = false;
     }
@@ -233,7 +208,7 @@ public class Grid : MonoBehaviour {
             if (!ValidCoordinate(column, h)) {
                 break;
             }
-            if (grid[column, h].gameObject.GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
+            if (grid[column, h].GetComponent<Block>().Status == Block.State.InsideCurrentStreak) {
                 exist = true;
                 currentColumn.Add(new IntVector2(column, h));
             }
@@ -247,7 +222,7 @@ public class Grid : MonoBehaviour {
             }
         }
         if (column == 0) {
-            GameObject.Find("current-streak-score").GetComponent<ScoreManager>().ToZero();
+            ScoreManager.Instance.ToZero();
         }
         coordinatesToBeCleared.AddRange(currentColumn);
     }
@@ -256,7 +231,7 @@ public class Grid : MonoBehaviour {
         var non = new List<Transform>();
         for (int i = 0; i < Width; i++) {
             for (int j = 0; j < Height; j++) {
-                if (grid[i, j] != null && grid[i, j].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+                if (grid[i, j] != null && grid[i, j].GetComponent<Block>().Status == Block.State.Normal) {
                     non.Add(grid[i, j]);
                 }
             }
@@ -271,10 +246,10 @@ public class Grid : MonoBehaviour {
         while (non.Count > 0) {
             var item = non.PopAt(0);
             var p = FindBlockPositionInGrid(item);
-            if (grid[p.x, p.y].gameObject.GetComponent<Block>().Status == Block.State.Normal) {
+            if (grid[p.x, p.y].GetComponent<Block>().Status == Block.State.Normal) {
                 continue;
             }
-            SoundManager.Instance.PlaySound(SoundManager.Sound.Clear);
+            SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Clear);
             Stack<IntVector2> s = new Stack<IntVector2>();
             s.Push(p);
             while (s.Count > 0) {
@@ -283,7 +258,7 @@ public class Grid : MonoBehaviour {
                 non.Remove(grid[i.x, i.y]);
                 foreach (var direction in directions) {
                     var neighbor = new IntVector2(i.x + direction.x, i.y + direction.y);
-                    if (!visited.Contains(neighbor) && ValidCoordinate(neighbor) && grid[neighbor.x, neighbor.y].gameObject.GetComponent<Block>().Status != Block.State.Normal) {
+                    if (!visited.Contains(neighbor) && ValidCoordinate(neighbor) && grid[neighbor.x, neighbor.y].GetComponent<Block>().Status != Block.State.Normal) {
                         s.Push(neighbor);
                     }
                 }
@@ -314,7 +289,8 @@ public class Grid : MonoBehaviour {
         }
         foreach (IntVector2 coord in coordinatesToBeCleared) {
             if (coordinatesToBeCleared.Contains(new IntVector2(coord.x, coord.y - 1))) {
-                Instantiate(Clear, new Vector3(coord.x, coord.y, -1), Quaternion.identity);
+                GameObject Clear = (GameObject) Instantiate(ClearPrefab, new Vector3(coord.x, coord.y, -1), Quaternion.identity);
+                NetworkServer.Spawn(Clear);
             }
         }
         JudgeAllColumns();
@@ -328,10 +304,9 @@ public class Grid : MonoBehaviour {
                 if (h == current) {
                 }
                 else {
-                    grid[column, h].gameObject.GetComponent<Block>().DownTarget = current;
                     grid[column, current] = grid[column, h];
                     grid[column, h] = null;
-                    grid[column, current].gameObject.GetComponent<Block>().GoDown = true;
+                    grid[column, current].GetComponent<Block>().setDownTarget(current);
                 }
                 current += 1;
             }
@@ -345,12 +320,10 @@ public class Grid : MonoBehaviour {
         for (int i = 0; i < Width; i++) {
             columnsHeight[i] = 0;
             for (int j = 0; j < Height; j++) {
-                if (grid[i, j] != null && grid[i, j].parent != CurrentGroup) {
-                    columnsHeight[i] += 1;
-                }
-                else {
+                if (grid[i, j] == null || GameManager.Instance.isPlayerGroup(grid[i, j].parent))
                     break;
-                }
+
+                columnsHeight[i] += 1;
             }
         }
         return columnsHeight;
@@ -387,6 +360,6 @@ public class Grid : MonoBehaviour {
                 count += 1;
             }
         }
-        GameObject.Find("current-streak-score").GetComponent<ScoreManager>().AddScore(Math.Max(count, 1));
+        ScoreManager.Instance.AddScore(Math.Max(count, 1));
     }
 }

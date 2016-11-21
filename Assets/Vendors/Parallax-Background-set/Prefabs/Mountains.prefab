@@ -83,6 +83,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010650095594}
+  - 114: {fileID: 114000013025194194}
   m_Layer: 9
   m_Name: Mountains
   m_TagString: Untagged
@@ -604,6 +605,38 @@ MonoBehaviour:
   speed: -0.05
   current: {fileID: 0}
   tileSize: 31.619
+--- !u!114 &114000013025194194
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011786275414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 69
+    i1: 83
+    i2: 72
+    i3: 27
+    i4: 196
+    i5: 208
+    i6: 29
+    i7: 20
+    i8: 217
+    i9: 195
+    i10: 5
+    i11: 34
+    i12: 192
+    i13: 145
+    i14: 252
+    i15: 196
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000013823374254
 MonoBehaviour:
   m_ObjectHideFlags: 1

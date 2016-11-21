@@ -11,10 +11,6 @@ public class AnimateTextMesh : MonoBehaviour {
         startTextMeshAnimation();
     }
 
-    // Update is called once per frame
-    private void Update() {
-    }
-
     private IEnumerator anim() {
         Color currentColor = textMesh.color;
 

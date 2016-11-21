@@ -99,6 +99,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012634326038}
+  - 114: {fileID: 114000012284636092}
   m_Layer: 9
   m_Name: Night-Forest
   m_TagString: Untagged
@@ -500,6 +501,38 @@ MonoBehaviour:
   speed: -0.03
   current: {fileID: 0}
   tileSize: 30.54
+--- !u!114 &114000012284636092
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012194929860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 69
+    i1: 12
+    i2: 61
+    i3: 101
+    i4: 116
+    i5: 59
+    i6: 234
+    i7: 116
+    i8: 232
+    i9: 155
+    i10: 151
+    i11: 184
+    i12: 124
+    i13: 65
+    i14: 156
+    i15: 134
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000013698384016
 MonoBehaviour:
   m_ObjectHideFlags: 1

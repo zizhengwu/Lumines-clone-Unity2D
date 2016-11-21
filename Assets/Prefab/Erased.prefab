@@ -22,6 +22,8 @@ GameObject:
   - 212: {fileID: 212000013374949090}
   - 95: {fileID: 95000011041677184}
   - 114: {fileID: 114000012993953760}
+  - 114: {fileID: 114000012716608702}
+  - 114: {fileID: 114000012692407560}
   m_Layer: 8
   m_Name: Erased
   m_TagString: Untagged
@@ -59,6 +61,58 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000012692407560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012256535810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114000012716608702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012256535810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 130
+    i1: 171
+    i2: 16
+    i3: 63
+    i4: 250
+    i5: 34
+    i6: 204
+    i7: 68
+    i8: 74
+    i9: 30
+    i10: 169
+    i11: 15
+    i12: 43
+    i13: 144
+    i14: 45
+    i15: 25
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114000012993953760
 MonoBehaviour:
   m_ObjectHideFlags: 1

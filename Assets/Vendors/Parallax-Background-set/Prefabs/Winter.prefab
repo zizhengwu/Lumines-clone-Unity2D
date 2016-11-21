@@ -197,6 +197,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013421252392}
+  - 114: {fileID: 114000014010348626}
   m_Layer: 9
   m_Name: Winter
   m_TagString: Untagged
@@ -602,6 +603,38 @@ MonoBehaviour:
   speed: -0.03
   current: {fileID: 0}
   tileSize: 30.27
+--- !u!114 &114000014010348626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012922803172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 72
+    i1: 254
+    i2: 150
+    i3: 157
+    i4: 77
+    i5: 172
+    i6: 163
+    i7: 180
+    i8: 168
+    i9: 135
+    i10: 83
+    i11: 178
+    i12: 149
+    i13: 140
+    i14: 36
+    i15: 142
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!124 &124000012344734276
 Behaviour:
   m_ObjectHideFlags: 1

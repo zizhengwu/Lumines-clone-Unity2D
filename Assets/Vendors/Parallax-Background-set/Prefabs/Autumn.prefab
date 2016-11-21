@@ -149,6 +149,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010420324472}
+  - 114: {fileID: 114000013831241660}
   m_Layer: 9
   m_Name: Autumn
   m_TagString: Untagged
@@ -618,6 +619,38 @@ MonoBehaviour:
   speed: -0.01
   current: {fileID: 0}
   tileSize: 35.5
+--- !u!114 &114000013831241660
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012251974382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 7
+    i1: 136
+    i2: 146
+    i3: 83
+    i4: 33
+    i5: 72
+    i6: 16
+    i7: 244
+    i8: 169
+    i9: 29
+    i10: 254
+    i11: 127
+    i12: 56
+    i13: 142
+    i14: 233
+    i15: 217
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114000013918401334
 MonoBehaviour:
   m_ObjectHideFlags: 1
