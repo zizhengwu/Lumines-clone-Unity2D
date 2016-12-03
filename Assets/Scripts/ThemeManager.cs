@@ -78,7 +78,12 @@ public class ThemeManager : NetworkBehaviour {
     }
     #endregion
 
+
     public void ChangeTheme() {
+        if (!isServer)
+            return;
+
+
         int rnd = Random.Range(0, Themes.Count);
         while (rnd == _currentThemeIndex) {
             rnd = Random.Range(0, Themes.Count);

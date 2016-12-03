@@ -28,11 +28,12 @@ public class InputManager : NetworkBehaviour {
     private bool _downFingerReady = true;
     private Transform _preGroup = null;
     */
+    private float _clockAndAntiBoundary;
+    private float _upDownBoundary;
+
     private float ScreenWidth;
     private float ScreenHeight;
     public float FallThreshold = 0.7f;
-    private float _clockAndAntiBoundary;
-    private float _upDownBoundary;
     private float _lastFall = 0f;
 
     // Use this for initialization

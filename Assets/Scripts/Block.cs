@@ -18,10 +18,9 @@
  */
 
 using UnityEngine;
-using UnityEngine.Networking;
 
 // Multiple instance object in Network
-public class Block : NetworkBehaviour {
+public class Block : MonoBehaviour {
     public enum State {
         Normal,
         ToBeErased,
@@ -71,19 +70,16 @@ public class Block : NetworkBehaviour {
             }
         }
     }
-
-    [Server]
+    
     public void init(int value) {
         ;
     }
-
-    [Server]
+    
     public void setDownTarget(int target) {
         _downTarget = target;
         _goDown = true;
     }
-
-    [Client]
+    
     private void ChangeSprite(State value) {
         if (value == State.ToBeErased) {
             switch (Type) {
@@ -111,8 +107,7 @@ public class Block : NetworkBehaviour {
             }
         }
     }
-
-    [Client]
+    
     public void SpriteThemeChange() {
         if (Status != State.InsideCurrentStreak) {
             ChangeSprite(Status);
@@ -121,8 +116,7 @@ public class Block : NetworkBehaviour {
             ;
         }
     }
-
-    [Client]
+    
     private void Update() {
         if (Enabled == false) {
             enabled = false;
@@ -132,8 +126,6 @@ public class Block : NetworkBehaviour {
         else {
             SpriteThemeChange();
             if (_goDown) {
-                Vector2 roundedPosition = Grid.Instance.RoundVector2(transform.position);
-
                 Vector3 targetPosition = new Vector3(transform.position.x, _downTarget + 0.5f, transform.position.z);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10*Time.deltaTime);
                 if (transform.position == targetPosition) {
@@ -145,8 +137,7 @@ public class Block : NetworkBehaviour {
             }
         }
     }
-
-    [Client]
+    
     public bool IsSameType(Block other) {
         return Type == other.Type;
     }

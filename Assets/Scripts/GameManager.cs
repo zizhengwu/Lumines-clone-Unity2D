@@ -54,17 +54,32 @@ public class GameManager : NetworkBehaviour {
         init,
         renewGroup
     }
-    
-    public int playerNumber = 2;
-    public List<GameObject> startPos = new List<GameObject>();
+
+    private int playerNumber = 0;
+    private GameObject[] startPos = null;
     private Dictionary<InputManager, Group> groupMap = new Dictionary<InputManager, Group>();
     private Dictionary<InputManager, Transform> posMap = new Dictionary<InputManager, Transform>();
 
-    // Use this for initialization
     [Server]
     private void Start() {
         //TODO all clients must set targetFrameRate
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 60;
+    }
+
+    // Use this for initialization
+    [Server]
+    public override void OnStartServer() {
+        playerNumber = LuminesNetworkManager.Instance.playerNumber;
+
+        if (playerNumber == 1) {
+            startPos = GameObject.FindGameObjectsWithTag("SinglePlayerPos");
+        }
+        else if (playerNumber > 1) {
+            startPos = GameObject.FindGameObjectsWithTag("MultiPlayerPos");
+        }
+        else {
+            throw new System.Exception("Unknown playerNumber: " + playerNumber);
+        }
     }
 
     [Server]

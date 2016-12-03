@@ -52,6 +52,9 @@ public class ScoreManager : NetworkBehaviour {
     
     [Client]
     private void Update() {
+        if (GameStatusSyncer.Instance.isStart == false)
+            return;
+
         float elapseTime = GameStatusSyncer.Instance.GameTime - GameStatusSyncer.Instance.GameStartTime;
         
         ScoreFlag.text = tempScore.ToString();

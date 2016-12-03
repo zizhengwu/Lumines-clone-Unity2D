@@ -36,7 +36,6 @@ public class Grid : NetworkBehaviour {
     public static bool[,] ShouldClear = new bool[Width, Height];
     private static List<IntVector2> coordinatesToBeCleared = new List<IntVector2>();
 
-
     #region Singleton
     private static Grid _instance = null;
     public static Grid Instance {

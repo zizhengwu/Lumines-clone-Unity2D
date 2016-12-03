@@ -148,6 +148,7 @@ public class Group : NetworkBehaviour {
             else {
                 throw new System.Exception();
             }
+            
             if (downwardsGridY >= 10) {
                 GameManager.Instance.GameOver();
                 return;
@@ -157,6 +158,7 @@ public class Group : NetworkBehaviour {
 
             child.GetComponent<Block>().setDownTarget(downwardsGridY);
         }
+        
         Grid.Instance.JudgeClearAtColumn((int) transform.position.x - 1);
         Grid.Instance.JudgeClearAtColumn((int) transform.position.x    );
         Grid.Instance.JudgeClearAtColumn((int) transform.position.x + 1);

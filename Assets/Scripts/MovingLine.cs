@@ -30,7 +30,7 @@ public class MovingLine : NetworkBehaviour {
     }
 
     private void FixedUpdate() {
-        if (!isServer)  
+        if (!isServer || GameStatusSyncer.Instance.isStart == false)  
             return;
 
         // 4s for a complete span, x in [0, 16)
