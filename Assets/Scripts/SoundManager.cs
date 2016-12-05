@@ -65,8 +65,8 @@ public class SoundManager : NetworkBehaviour {
     #endregion
 
     #region HandleThemeChange
-    [ClientRpc]
-    public void RpcHandleThemeChange(object sender, EventArgs args) {
+	[ClientRpc]    
+    public void RpcHandleThemeChange() {
         var rnd = new System.Random();
         string prefix = "Sounds/" + rnd.Next(1, 6) + "/";
 

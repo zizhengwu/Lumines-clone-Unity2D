@@ -52,7 +52,7 @@ public class ThemeManager : NetworkBehaviour {
 
     [Command]
     private void CmdHandleThemeChange(int themeIndex) {
-        SoundManager.Instance.RpcHandleThemeChange(this, EventArgs.Empty);
+        SoundManager.Instance.RpcHandleThemeChange();
         BackgroundFactory.Instance.HandleThemeChanged(this, EventArgs.Empty);
         //ThemeLine.Instance.BeginThemeChange();
     }
