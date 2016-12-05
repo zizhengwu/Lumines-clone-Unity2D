@@ -86,6 +86,9 @@ public class InputManager : NetworkBehaviour {
             case "anticlockwiseRotate":
                 GameManager.Instance.groupControl(this, GameManager.InputCommand.anticlockwiseRotate);
                 break;
+			case "moveToButtom":
+				GameManager.Instance.groupControl (this, GameManager.InputCommand.moveToButtom);
+				break;
             default:
                 Debug.Log("Unrecognized command: " + command);
                 break;
@@ -138,6 +141,9 @@ public class InputManager : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.J)) {
             CmdToServer("anticlockwiseRotate");
         }
+		if (Input.GetKeyDown(KeyCode.L)) {
+			CmdToServer("moveToButtom");
+		}
         if (GameStatusSyncer.Instance.GameTime - _lastFall > FallThreshold) {
             CmdToServer("moveDown");
             _lastFall = GameStatusSyncer.Instance.GameTime;

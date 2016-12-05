@@ -124,14 +124,15 @@ public class Group : NetworkBehaviour {
             transform.position += new Vector3(0, -1, 0);
         }
         else {
-            SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Hit);
-            GameManager.Instance.gameControl(GameManager.Instance.getPlayer(this), GameManager.Command.renewGroup);
             MovetoButtom();
         }
     }
 
     [Server]
     public void MovetoButtom() {
+		SoundManager.Instance.CmdPlaySound(SoundManager.Sound.Hit);
+		GameManager.Instance.gameControl(GameManager.Instance.getPlayer(this), GameManager.Command.renewGroup);
+
         List<IntVector2> blocksCoordinate = new List<IntVector2>();
         int[] columnsHeight = Grid.Instance.ColumnFullUntilHeight();
         foreach (Transform child in transform) {

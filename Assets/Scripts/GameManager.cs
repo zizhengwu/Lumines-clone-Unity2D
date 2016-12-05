@@ -47,7 +47,8 @@ public class GameManager : NetworkBehaviour {
         moveRight,
         moveLeft,
         anticlockwiseRotate,
-        clockwiseRotate
+        clockwiseRotate,
+		moveToButtom
     }
 
     public enum Command {
@@ -140,6 +141,9 @@ public class GameManager : NetworkBehaviour {
             case InputCommand.clockwiseRotate:
                 groupMap[player].ClockwiseRotate();
                 break;
+			case InputCommand.moveToButtom:
+				groupMap [player].MovetoButtom ();
+				break;
             default:
                 throw new System.Exception("Unknown Input Command: " + command);
         }        

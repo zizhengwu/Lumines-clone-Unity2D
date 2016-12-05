@@ -123,7 +123,7 @@ public class Block : MonoBehaviour {
             SpriteThemeChange();
             if (_goDown) {
                 Vector3 targetPosition = new Vector3(transform.position.x, _downTarget + 0.5f, transform.position.z);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10*Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, 20*Time.deltaTime);
                 if (transform.position == targetPosition) {
                     _goDown = false;
                     if (Status == State.ToBeErasedWhileFallingDown) {
