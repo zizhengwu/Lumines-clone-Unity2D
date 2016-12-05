@@ -71,10 +71,6 @@ public class Block : MonoBehaviour {
         }
     }
     
-    public void init(int value) {
-        ;
-    }
-    
     public void setDownTarget(int target) {
         _downTarget = target;
         _goDown = true;

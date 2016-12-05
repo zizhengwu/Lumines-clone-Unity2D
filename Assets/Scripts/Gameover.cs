@@ -22,7 +22,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class Gameover : MonoBehaviour {
+public class Gameover : NetworkBehaviour {
     #region Singleton
     private static Gameover _instance = null;
     public static Gameover Instance {
@@ -45,12 +45,14 @@ public class Gameover : MonoBehaviour {
     public GameObject AchiveHighscore;
 
     public void Start() {
-        gameObject.SetActive(false);
+		GetComponent<RectTransform> ().localScale = new Vector3 (0, 0, 0);
     }
 
-    public void ToggleEndMenu() {
+	[ClientRpc]
+    public void RpcToggleEndMenu() {
         SoundManager.Instance.CmdStopTheme();
-        gameObject.SetActive(true);
+		GetComponent<RectTransform> ().localPosition = new Vector3(0, 2, 0);
+		GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 0);
 
         int score = GameStatusSyncer.Instance.GameScore;
         Score.text = string.Format("Score          {0}", score.ToString());
@@ -61,15 +63,8 @@ public class Gameover : MonoBehaviour {
         }
     }
 
+	[Client]
     public void BackToStartScreen() {
-        NetworkManager ntmanager = FindObjectOfType<NetworkManager>();
-
-        if (FindObjectOfType<GameManager>() != null)
-            ntmanager.StopHost();
-        else
-            ntmanager.StopClient();
-        
-
-        Time.timeScale = 1;
-    }
+		FindObjectOfType<NetworkManager> ().StopHost ();
+	}
 }

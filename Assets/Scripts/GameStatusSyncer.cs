@@ -90,6 +90,20 @@ public class GameStatusSyncer : NetworkBehaviour {
         }
     }
 
+	[SyncVar]
+	private int _themeIndex = 0;
+	public int ThemeIndex {
+		get {
+			return _themeIndex;
+		}
+		set {
+			if (!isServer)
+				return;
+
+			_themeIndex = value;
+		}
+	}
+
     private void Start() {
         if (!isServer)
             return;

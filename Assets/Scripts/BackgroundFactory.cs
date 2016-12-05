@@ -46,7 +46,7 @@ public class BackgroundFactory : NetworkBehaviour {
     #endregion
 
     [Server]
-    public void HandleThemeChanged(object sender, EventArgs args) {
+    public void HandleThemeChanged() {
         if (_currentThemeGameObject != null) {
             Destroy(_currentThemeGameObject);
             NetworkServer.Destroy(_currentThemeGameObject);

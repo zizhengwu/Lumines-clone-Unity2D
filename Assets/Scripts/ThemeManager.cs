@@ -29,66 +29,55 @@ public class ThemeManager : NetworkBehaviour {
 
     public Theme CurrentTheme {
         get {
-            return Themes[_currentThemeIndex];
+			return Themes[GameStatusSyncer.Instance.ThemeIndex];
         }
     }
     public string CurrentThemeName {
         get {
-            return ThemeNames[_currentThemeIndex];
+			return ThemeNames[GameStatusSyncer.Instance.ThemeIndex];
         }
         set {
             for (int i = 0; i < ThemeNames.Length; i++) {
                 if (ThemeNames[i] == value) {
-                    _currentThemeIndex = i;
+					GameStatusSyncer.Instance.ThemeIndex = i;
                     break;
                 }
             }
         }
         
     }
+	#region Sigleton
+	private static ThemeManager _instance;
+	public static ThemeManager Instance {
+		get {
+			if (_instance == null) {
+				_instance = GameObject.FindObjectOfType<ThemeManager>();
+			}
+			return _instance;
+		}
+	}
 
-    [SyncVar (hook = "CmdHandleThemeChange")]
-    public int _currentThemeIndex;
+	private void Awake() {
+		if (_instance == null) {
+			_instance = this;
+		}
+		else if (_instance != this) {
+			Destroy(this.gameObject);
+		}
+	}
+	#endregion
 
-    [Command]
-    private void CmdHandleThemeChange(int themeIndex) {
+	[Command]
+	public void CmdChangeTheme(){
+		int rnd = Random.Range(0, Themes.Count);
+		while (rnd == GameStatusSyncer.Instance.ThemeIndex) {
+			rnd = Random.Range (0, Themes.Count);
+		}
+
+		GameStatusSyncer.Instance.ThemeIndex = rnd;
         SoundManager.Instance.RpcHandleThemeChange();
-        BackgroundFactory.Instance.HandleThemeChanged(this, EventArgs.Empty);
+        BackgroundFactory.Instance.HandleThemeChanged();
         //ThemeLine.Instance.BeginThemeChange();
-    }
-
-    #region Sigleton
-    private static ThemeManager _instance;
-    public static ThemeManager Instance {
-        get {
-            if (_instance == null) {
-                _instance = GameObject.FindObjectOfType<ThemeManager>();
-            }
-            return _instance;
-        }
-    }
-
-    private void Awake() {
-        if (_instance == null) {
-            _instance = this;
-        }
-        else if (_instance != this) {
-            Destroy(this.gameObject);
-        }
-    }
-    #endregion
-
-
-    public void ChangeTheme() {
-        if (!isServer)
-            return;
-
-
-        int rnd = Random.Range(0, Themes.Count);
-        while (rnd == _currentThemeIndex) {
-            rnd = Random.Range(0, Themes.Count);
-        }
-        _currentThemeIndex = rnd;
     }
 
     private void Start() {
@@ -96,6 +85,9 @@ public class ThemeManager : NetworkBehaviour {
         foreach (String themeName in ThemeNames) {
             Themes.Add(new Theme(themeName));
         }
-        ChangeTheme();
+
+		if (isServer) {
+			CmdChangeTheme ();
+		}
     }
 }

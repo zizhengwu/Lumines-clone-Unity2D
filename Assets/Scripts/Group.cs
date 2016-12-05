@@ -34,7 +34,6 @@ public class Group : NetworkBehaviour {
         foreach (Transform child in transform){
             int type = Random.Range(0, 2);
 
-            child.GetComponent<Block>().init(type);
             _blockType.Add(type);
             _blockStatus.Add((int) Block.State.Normal);
             _blockEnabled.Add(true);

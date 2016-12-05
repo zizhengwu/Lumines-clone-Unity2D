@@ -84,7 +84,7 @@ public class GameManager : NetworkBehaviour {
 
     [Server]
     public void GameStart() {
-        ThemeManager.Instance.ChangeTheme();
+        //ThemeManager.Instance.ChangeTheme();
         foreach (InputManager player in groupMap.Keys) {
             player.GameStart();
         }
@@ -95,16 +95,15 @@ public class GameManager : NetworkBehaviour {
     public void GameOver() {
         posMap.Clear();
         groupMap.Clear();
-        Time.timeScale = 0;
         GameStatusSyncer.Instance.isStart = false;
-        Gameover.Instance.ToggleEndMenu();
+        Gameover.Instance.RpcToggleEndMenu();
     }
 
     [Server]
     public void gameControl (InputManager player, Command command) {
         if (player == null)
             return;
-
+		
         switch (command) {
             case Command.init:
                 groupMap[player] = GroupsFactory.Instance.getNext();

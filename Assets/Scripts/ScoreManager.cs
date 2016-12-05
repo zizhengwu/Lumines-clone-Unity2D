@@ -71,7 +71,7 @@ public class ScoreManager : NetworkBehaviour {
         int originalScore = GameStatusSyncer.Instance.GameScore;
         int finalScore = GameStatusSyncer.Instance.GameScore = originalScore + score;
         if ((originalScore < 10 && finalScore >= 10) || ((originalScore / 50) != (finalScore / 50))) {
-            ThemeManager.Instance.ChangeTheme();
+            ThemeManager.Instance.CmdChangeTheme();
         }
     }
     
