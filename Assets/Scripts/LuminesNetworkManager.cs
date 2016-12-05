@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class LuminesNetworkManager : NetworkBehaviour {
+public class LuminesNetworkManager : MonoBehaviour {
     #region Singleton
     private static LuminesNetworkManager _instance;
     public static LuminesNetworkManager Instance {
@@ -25,18 +25,4 @@ public class LuminesNetworkManager : NetworkBehaviour {
     #endregion
 
     public int playerNumber = 1;
-
-    public void StartSingleMode() {
-        playerNumber = 1;
-        FindObjectOfType<NetworkManager>().StartHost();
-    }
-
-    public void StartCoopServer() {
-        playerNumber = 2;
-        FindObjectOfType<NetworkManager>().StartHost();
-    }
-
-    public void StartCoopClient() {
-        FindObjectOfType<NetworkManager>().StartClient();
-    }
 }
